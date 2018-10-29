@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import com.tsystems.r2b.dflow.screens.login.LoginFragment
 import com.tsystems.r2b.dflow.screens.map.MapFragment
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.nav_header_main.*
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private val mainViewModel: MainViewModel by lazy(LazyThreadSafetyMode.NONE) {
@@ -68,5 +68,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        supportFragmentManager.fragments.filter { it.isVisible }.forEach {
+            it.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
+    }
+
+    fun lockDrawer(lock: Boolean) {
+        drawer_layout.setDrawerLockMode(if (lock) DrawerLayout.LOCK_MODE_LOCKED_CLOSED else DrawerLayout.LOCK_MODE_UNLOCKED)
     }
 }

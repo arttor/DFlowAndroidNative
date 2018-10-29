@@ -6,34 +6,39 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.tsystems.r2b.dflow.MainActivity
 import com.tsystems.r2b.dflow.databinding.LoginFragmentBinding
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 class LoginFragment : Fragment() {
     private val loginViewModel: LoginViewModel by lazy(LazyThreadSafetyMode.NONE) {
         ViewModelProviders.of(this).get(LoginViewModel::class.java)
     }
-
+    private lateinit var rootView: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = LoginFragmentBinding.inflate(inflater, container, false)
         binding.model = loginViewModel
-        return binding.root
+        rootView = binding.root
+        return rootView
     }
 
     override fun onDetach() {
         super.onDetach()
         showSoftwareKeyboard(false)
-        drawer_layout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
     }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        drawer_layout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+    override fun onStart() {
+        super.onStart()
+        val act =requireActivity()as MainActivity
+        act.lockDrawer(true)
+    }
+    override fun onStop() {
+        super.onStop()
+        val act =requireActivity()as MainActivity
+        act.lockDrawer(false)
     }
 
     private fun showSoftwareKeyboard(showKeyboard: Boolean) {

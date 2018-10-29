@@ -1,25 +1,24 @@
 package com.tsystems.r2b.dflow.screens.map
 
-import android.annotation.SuppressLint
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.mapbox.android.core.permissions.PermissionsListener
-import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.tsystems.r2b.dflow.R
-import kotlinx.android.synthetic.main.map_fragment.*
+import com.tsystems.r2b.dflow.util.Permissions
 import org.jetbrains.anko.longToast
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 
 
-
-
-class MapFragment : Fragment(), PermissionsListener {
+class MapFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,28 +71,43 @@ class MapFragment : Fragment(), PermissionsListener {
         mapView.onSaveInstanceState(outState)
     }
 
-    override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {
-        activity?.longToast(R.string.user_location_permission_explanation)
-    }
-
-    override fun onPermissionResult(granted: Boolean) {
-        if (granted) {
-            mapView.getMapAsync {
-                enableUserLocation(it)
+    override fun onRequestPermissionsResult(requestCode: Int,permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            Permissions.LOCATION -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    mapView.getMapAsync {
+                        enableUserLocation(it)
+                    }
+                } else {
+                    activity?.longToast(R.string.user_location_permission_not_granted)
+                }
+                return
             }
-        } else {
-            activity?.longToast(R.string.user_location_permission_not_granted)
+
+            // Add other 'when' lines to check for other
+            // permissions this app might request.
+            else -> {
+                // Ignore all other requests.
+            }
         }
     }
 
-    @SuppressLint("MissingPermission")
     private fun enableUserLocation(mapboxMap: MapboxMap) {
         val locationComponent = mapboxMap.locationComponent
         // Activate with options
-        if (!PermissionsManager.areLocationPermissionsGranted(this.requireContext())) {
-            val permissionsManager = PermissionsManager(this)
-            permissionsManager.requestLocationPermissions(this.requireActivity())
-        }else{
+        if (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            ActivityCompat.requestPermissions(
+                this.requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                Permissions.LOCATION
+            )
+        } else {
             locationComponent.activateLocationComponent(this.requireContext())
             // Enable to make component visible
             locationComponent.isLocationComponentEnabled = true
