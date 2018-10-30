@@ -5,13 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.tsystems.r2b.dflow.data.local.dao.MapLocationDao
 import com.tsystems.r2b.dflow.data.local.dao.UserDao
+import com.tsystems.r2b.dflow.model.MapLocation
 import com.tsystems.r2b.dflow.model.User
 
-@Database(entities = arrayOf(User::class), version = 1)
+@Database(entities = arrayOf(User::class,MapLocation::class), version = 1)
 @TypeConverters(Converters::class)
 abstract class DFlowDb : RoomDatabase() {
     abstract fun userDao(): UserDao
+    abstract fun mapLocationDao(): MapLocationDao
 
     companion object {
         private const val databaseName = "d-flow-db"

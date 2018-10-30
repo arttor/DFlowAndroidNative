@@ -10,24 +10,24 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.mapbox.android.core.location.LocationEngineListener
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.tsystems.r2b.dflow.R
+import com.tsystems.r2b.dflow.databinding.MapFragmentBinding
 import com.tsystems.r2b.dflow.util.Permissions
 import kotlinx.android.synthetic.main.map_fragment.*
 import org.jetbrains.anko.longToast
 
 
 class MapFragment : Fragment(), LocationEngineListener {
-    override fun onLocationChanged(location: Location?) {
 
-    }
-
-    override fun onConnected() {
-
+    private val mapViewModel: MapViewModel by lazy(LazyThreadSafetyMode.NONE) {
+        ViewModelProviders.of(this).get(MapViewModel::class.java)
     }
 
     private lateinit var mapboxMap: MapboxMap
@@ -37,11 +37,32 @@ class MapFragment : Fragment(), LocationEngineListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.map_fragment, container, false)
+        val binding = MapFragmentBinding.inflate(inflater, container, false)
+        val adapter = MapLocationsAdapter()
+        binding.mapObjectsList.adapter = adapter
+        binding.setLifecycleOwner(this)
+        subscribeUi(
+            adapter,
+            binding)
+        return binding.root
+    }
+    private fun subscribeUi(
+        adapter: MapLocationsAdapter,
+                            binding: MapFragmentBinding) {
+
+
+        mapViewModel.locations.observe(viewLifecycleOwner, Observer {
+            binding.hasMapLocations = (it != null && it.isNotEmpty())
+        })
+
+        mapViewModel.locations.observe(viewLifecycleOwner, Observer { result ->
+            if (result != null && result.isNotEmpty())
+                adapter.submitList(result)
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        //super.onViewCreated(view, savedInstanceState)
+        super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync {
             mapboxMap = it
@@ -136,5 +157,13 @@ class MapFragment : Fragment(), LocationEngineListener {
                 )
             }
         }
+    }
+
+    override fun onLocationChanged(location: Location?) {
+
+    }
+
+    override fun onConnected() {
+
     }
 }

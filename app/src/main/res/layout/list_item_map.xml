@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+                name="clickListener"
+                type="android.view.View.OnClickListener"/>
+        <variable
+                name="location"
+                type="com.tsystems.r2b.dflow.model.MapLocation"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{clickListener}">
+
+        <ImageView
+                android:id="@+id/location_item_image"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/map_location_item_image_height"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
+                android:contentDescription="@{@string/map_location_image(location.name)}"
+                android:scaleType="centerCrop"
+                app:imageFromUrl="@{location.imageUrl}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+                android:id="@+id/location_item_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:text="@{location.name}"
+                android:textAppearance="?attr/textAppearanceListItem"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/location_item_image"/>
+        <TextView
+                android:id="@+id/location_item_tariff"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginTop="8dp"
+                android:text="@{location.tariff}"
+                android:textAppearance="?attr/textAppearanceListItem"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/location_item_title"
+                app:layout_constraintHorizontal_bias="0.0"/>
+        <!--<TextView-->
+                <!--android:id="@+id/location_item_distance"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginEnd="@dimen/margin_small"-->
+                <!--android:layout_marginStart="@dimen/margin_small"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:text="@{location.charge}"-->
+                <!--android:textAppearance="?attr/textAppearanceListItem"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/location_item_tariff"-->
+                <!--app:layout_constraintHorizontal_bias="0.0"/>-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
