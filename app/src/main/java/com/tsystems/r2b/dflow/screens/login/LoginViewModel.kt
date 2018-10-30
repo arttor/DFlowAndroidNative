@@ -7,7 +7,7 @@ import java.util.*
 
 
 class LoginViewModel : ViewModel() {
-    var username: String?="asd"
+    var username: String?=null
     var password: String?=null
 
     fun login (){
