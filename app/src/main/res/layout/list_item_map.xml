@@ -11,24 +11,24 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@color/colorAccent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="@{clickListener}">
+            android:onClick="@{clickListener}"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp">
 
         <ImageView
                 android:id="@+id/location_item_image"
-                android:layout_width="0dp"
+                android:scaleType="centerInside"
+                android:layout_width="wrap_content"
+                android:adjustViewBounds="true"
                 android:layout_height="@dimen/map_location_item_image_height"
                 android:layout_marginTop="@dimen/margin_normal"
-                android:layout_marginBottom="@dimen/margin_small"
-                android:layout_marginEnd="@dimen/margin_small"
-                android:layout_marginStart="@dimen/margin_small"
                 android:contentDescription="@{@string/map_location_image(location.name)}"
-                android:scaleType="centerCrop"
                 app:imageFromUrl="@{location.imageUrl}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"/>
 
         <TextView
                 android:id="@+id/location_item_title"
@@ -57,18 +57,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/location_item_title"
                 app:layout_constraintHorizontal_bias="0.0"/>
         <!--<TextView-->
-                <!--android:id="@+id/location_item_distance"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginEnd="@dimen/margin_small"-->
-                <!--android:layout_marginStart="@dimen/margin_small"-->
-                <!--android:layout_marginTop="8dp"-->
-                <!--android:text="@{location.charge}"-->
-                <!--android:textAppearance="?attr/textAppearanceListItem"-->
-                <!--app:layout_constraintEnd_toEndOf="parent"-->
-                <!--app:layout_constraintStart_toStartOf="parent"-->
-                <!--app:layout_constraintTop_toBottomOf="@+id/location_item_tariff"-->
-                <!--app:layout_constraintHorizontal_bias="0.0"/>-->
+        <!--android:id="@+id/location_item_distance"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginEnd="@dimen/margin_small"-->
+        <!--android:layout_marginStart="@dimen/margin_small"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:text="@{location.charge}"-->
+        <!--android:textAppearance="?attr/textAppearanceListItem"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/location_item_tariff"-->
+        <!--app:layout_constraintHorizontal_bias="0.0"/>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

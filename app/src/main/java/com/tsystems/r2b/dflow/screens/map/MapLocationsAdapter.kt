@@ -83,6 +83,7 @@ fun bindImageFromUrl(view: ImageView, imageUrl: String?) {
     if (!imageUrl.isNullOrEmpty()) {
         Picasso.with(view.context)
             .load(imageUrl)
+            //.fit()
             //.error(R.drawable.failure)
             .into(view)
     }

@@ -12,6 +12,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import com.mapbox.android.core.location.LocationEngineListener
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -38,9 +40,12 @@ class MapFragment : Fragment(), LocationEngineListener {
         savedInstanceState: Bundle?
     ): View? {
         val binding = MapFragmentBinding.inflate(inflater, container, false)
+        binding.mapObjectsList.layoutManager= LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         val adapter = MapLocationsAdapter()
         binding.mapObjectsList.adapter = adapter
         binding.setLifecycleOwner(this)
+        val snapHelper = LinearSnapHelper()
+        snapHelper.attachToRecyclerView(binding.mapObjectsList)
         subscribeUi(
             adapter,
             binding)
@@ -155,6 +160,10 @@ class MapFragment : Fragment(), LocationEngineListener {
                         ), 13.0
                     )
                 )
+                mapViewModel.getNearbyLocations(LatLng(
+                    it.latitude,
+                    it.longitude
+                ))
             }
         }
     }
