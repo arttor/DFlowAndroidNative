@@ -1,13 +1,13 @@
 package com.tsystems.r2b.dflow.screens.map
 
+import android.content.Context
+import android.graphics.PointF
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import com.squareup.picasso.Picasso
 import com.tsystems.r2b.dflow.databinding.ListItemMapBinding
 import com.tsystems.r2b.dflow.model.MapLocation
@@ -86,5 +86,31 @@ fun bindImageFromUrl(view: ImageView, imageUrl: String?) {
             //.fit()
             //.error(R.drawable.failure)
             .into(view)
+    }
+}
+
+class LinearLayoutManagerWithSmoothScroller(context: Context) :
+    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) {
+
+    override fun smoothScrollToPosition(
+        recyclerView: RecyclerView, state: RecyclerView.State?,
+        position: Int
+    ) {
+        val smoothScroller = TopSnappedSmoothScroller(recyclerView.context)
+        smoothScroller.targetPosition = position
+        startSmoothScroll(smoothScroller)
+    }
+
+    private inner class TopSnappedSmoothScroller internal constructor(context: Context) :
+        LinearSmoothScroller(context) {
+
+        override fun computeScrollVectorForPosition(targetPosition: Int): PointF? {
+            return this@LinearLayoutManagerWithSmoothScroller
+                .computeScrollVectorForPosition(targetPosition)
+        }
+
+        override fun getVerticalSnapPreference(): Int {
+            return SNAP_TO_START
+        }
     }
 }

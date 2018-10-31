@@ -12,15 +12,18 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.mapbox.android.core.location.LocationEngineListener
+import com.mapbox.mapboxsdk.annotations.Icon
+import com.mapbox.mapboxsdk.annotations.IconFactory
+import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.tsystems.r2b.dflow.R
 import com.tsystems.r2b.dflow.databinding.MapFragmentBinding
+import com.tsystems.r2b.dflow.model.LocationType
 import com.tsystems.r2b.dflow.util.Permissions
 import kotlinx.android.synthetic.main.map_fragment.*
 import org.jetbrains.anko.longToast
@@ -31,6 +34,12 @@ class MapFragment : Fragment(), LocationEngineListener {
     private val mapViewModel: MapViewModel by lazy(LazyThreadSafetyMode.NONE) {
         ViewModelProviders.of(this).get(MapViewModel::class.java)
     }
+    private val carIcon: Icon by lazy(LazyThreadSafetyMode.NONE) {
+        IconFactory.getInstance(requireContext()).fromResource(R.drawable.ic_car)
+    }
+    private val stationIcon: Icon by lazy(LazyThreadSafetyMode.NONE) {
+        IconFactory.getInstance(requireContext()).fromResource(R.drawable.ic_charging_station)
+    }
 
     private lateinit var mapboxMap: MapboxMap
     private var component: LocationComponent? = null
@@ -40,7 +49,7 @@ class MapFragment : Fragment(), LocationEngineListener {
         savedInstanceState: Bundle?
     ): View? {
         val binding = MapFragmentBinding.inflate(inflater, container, false)
-        binding.mapObjectsList.layoutManager= LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.mapObjectsList.layoutManager = LinearLayoutManagerWithSmoothScroller(requireContext())
         val adapter = MapLocationsAdapter()
         binding.mapObjectsList.adapter = adapter
         binding.setLifecycleOwner(this)
@@ -48,21 +57,35 @@ class MapFragment : Fragment(), LocationEngineListener {
         snapHelper.attachToRecyclerView(binding.mapObjectsList)
         subscribeUi(
             adapter,
-            binding)
+            binding
+        )
         return binding.root
     }
-    private fun subscribeUi(
-        adapter: MapLocationsAdapter,
-                            binding: MapFragmentBinding) {
 
+    private fun subscribeUi(adapter: MapLocationsAdapter, binding: MapFragmentBinding) {
 
         mapViewModel.locations.observe(viewLifecycleOwner, Observer {
             binding.hasMapLocations = (it != null && it.isNotEmpty())
         })
 
-        mapViewModel.locations.observe(viewLifecycleOwner, Observer { result ->
-            if (result != null && result.isNotEmpty())
-                adapter.submitList(result)
+        mapViewModel.locations.observe(viewLifecycleOwner, Observer { mapLocations ->
+            if (mapLocations != null && mapLocations.isNotEmpty())
+                adapter.submitList(mapLocations)
+            mapView.getMapAsync {
+                for(marker in it.markers){
+                    it.removeMarker(marker)
+                }
+                for(location in mapLocations){
+                    it.addMarker(MarkerOptions()
+                        .position(location.latLng)
+                        .title(location.name)
+                        .icon(when(location.type){
+                            LocationType.CAR -> carIcon
+                            LocationType.STATION -> stationIcon
+                        })
+                    )
+                }
+            }
         })
     }
 
@@ -136,9 +159,6 @@ class MapFragment : Fragment(), LocationEngineListener {
         // Activate with options
         if (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
-//            ||
-//            ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
-//            != PackageManager.PERMISSION_GRANTED
         ) {
 
             ActivityCompat.requestPermissions(
@@ -148,7 +168,6 @@ class MapFragment : Fragment(), LocationEngineListener {
             )
         } else {
             locationComponent.activateLocationComponent(requireActivity())
-            // Enable to make component visible
             locationComponent.isLocationComponentEnabled = true
             locationComponent.locationEngine?.addLocationEngineListener(this)
             locationComponent.lastKnownLocation?.let {
@@ -160,10 +179,12 @@ class MapFragment : Fragment(), LocationEngineListener {
                         ), 13.0
                     )
                 )
-                mapViewModel.getNearbyLocations(LatLng(
-                    it.latitude,
-                    it.longitude
-                ))
+                mapViewModel.getNearbyLocations(
+                    LatLng(
+                        it.latitude,
+                        it.longitude
+                    )
+                )
             }
         }
     }

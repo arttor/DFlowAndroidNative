@@ -15,8 +15,8 @@ class MapViewModel : ViewModel() {
 
     fun getNearbyLocations(userLocation: LatLng){
         MapLocationRepository.create(MapLocation("Jaguar E Pace", LocationType.CAR,
-            userLocation.latitude+0.05,
-            userLocation.longitude+0.05,0.6,"5\$ per hour",
+            userLocation.latitude+0.02,
+            userLocation.longitude+0.01,0.6,"5\$ per hour",
             "http://grantandgreen.de/wp-content/uploads/2018/03/Jag-E-Pace-BS-Blue.jpg"))
         MapLocationRepository.create(MapLocation("Tesla", LocationType.CAR,
             userLocation.latitude-0.05,
