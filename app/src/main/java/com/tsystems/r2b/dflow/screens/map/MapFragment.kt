@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,13 +15,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.mapbox.android.core.location.LocationEngineListener
-import com.mapbox.api.directions.v5.DirectionsCriteria
-import com.mapbox.api.directions.v5.MapboxDirections
-import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.core.constants.Constants
 import com.mapbox.geojson.LineString
-import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.annotations.Icon
 import com.mapbox.mapboxsdk.annotations.IconFactory
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
@@ -34,13 +29,10 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.tsystems.r2b.dflow.R
 import com.tsystems.r2b.dflow.databinding.MapFragmentBinding
 import com.tsystems.r2b.dflow.model.LocationType
-import com.tsystems.r2b.dflow.util.Permissions
+import com.tsystems.r2b.dflow.model.MapLocation
+import com.tsystems.r2b.dflow.util.PermissionsConst
 import kotlinx.android.synthetic.main.map_fragment.*
 import org.jetbrains.anko.longToast
-import org.jetbrains.anko.toast
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class MapFragment : Fragment(), LocationEngineListener {
@@ -55,18 +47,23 @@ class MapFragment : Fragment(), LocationEngineListener {
     private val stationIcon: Icon by lazy(LazyThreadSafetyMode.NONE) {
         IconFactory.getInstance(requireContext()).fromResource(R.drawable.ic_charging_station)
     }
-    private val carSelectedIcon: Icon by lazy(LazyThreadSafetyMode.NONE) {
-        IconFactory.getInstance(requireContext()).fromResource(R.drawable.ic_car_selected)
-    }
-    private val stationSelectedIcon: Icon by lazy(LazyThreadSafetyMode.NONE) {
-        IconFactory.getInstance(requireContext()).fromResource(R.drawable.ic_charging_station_selected)
-    }
     private val navigationLineColor: Int by lazy(LazyThreadSafetyMode.NONE) {
         ContextCompat.getColor(requireContext(), R.color.colorPrimary)
     }
 
-    private lateinit var mapboxMap: MapboxMap
+    private lateinit var mapBoxMap: MapboxMap
     private var component: LocationComponent? = null
+
+    private val onLocationClickListener: (MapLocation) -> Unit = { location ->
+        mapBoxMap.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                LatLng(
+                    location.latitude,
+                    location.longitude
+                ), 13.0
+            )
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,16 +71,7 @@ class MapFragment : Fragment(), LocationEngineListener {
     ): View? {
         val binding = MapFragmentBinding.inflate(inflater, container, false)
         binding.mapObjectsList.layoutManager = LinearLayoutManagerWithSmoothScroller(requireContext())
-        val adapter = MapLocationsAdapter {
-            mapboxMap.animateCamera(
-                CameraUpdateFactory.newLatLngZoom(
-                    LatLng(
-                        it.latitude,
-                        it.longitude
-                    ), 13.0
-                )
-            )
-        }
+        val adapter = MapLocationsAdapter(onLocationClickListener)
         binding.mapObjectsList.adapter = adapter
         binding.setLifecycleOwner(this)
         val snapHelper = LinearSnapHelper()
@@ -123,14 +111,20 @@ class MapFragment : Fragment(), LocationEngineListener {
                 }
             }
         })
+
+        mapViewModel.route.observe(viewLifecycleOwner, Observer { route ->
+            route?.let{
+                drawNavigationPolylineRoute(it)
+            }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync {
-            mapboxMap = it
-            component = mapboxMap.locationComponent
+            mapBoxMap = it
+            component = mapBoxMap.locationComponent
             enableUserLocation(it)
         }
         setUpMarkerClickListener(map_objects_list)
@@ -175,7 +169,7 @@ class MapFragment : Fragment(), LocationEngineListener {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            Permissions.LOCATION -> {
+            PermissionsConst.LOCATION -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     mapView.getMapAsync {
@@ -193,77 +187,26 @@ class MapFragment : Fragment(), LocationEngineListener {
     }
 
     private fun setUpMarkerClickListener(recyclerView: RecyclerView) {
-        mapView.getMapAsync {
-            it.setOnMarkerClickListener {
-                val positionOfSelectedMarker = it.getPosition();
+        mapView.getMapAsync { map ->
+            map.setOnMarkerClickListener {
+                val positionOfSelectedMarker = it.position
 
-                mapboxMap.markers.forEachIndexed { index, marker ->
+                map.markers.forEachIndexed { index, marker ->
                     if (positionOfSelectedMarker == marker.position) {
                         recyclerView.smoothScrollToPosition(index)
-                        // marker.icon
                     }
                 }
-                //setup icon change and route here
-                getInformationFromDirectionsApi(positionOfSelectedMarker)
+                mapViewModel.buildRouteTo(positionOfSelectedMarker)
                 // return true to not show title
                 false
             }
         }
     }
 
-
-    private fun getInformationFromDirectionsApi(
-        destination: LatLng
-    ) {
-        if (mapViewModel.currentPosition == null) {
-            requireActivity().toast(R.string.not_able_to_obtain_device_location)
-        } else {
-            val loc = mapViewModel.currentPosition as LatLng
-            // Set up origin and destination coordinates for the call to the Mapbox Directions API
-            val mockCurrentLocation = Point.fromLngLat(
-                loc.longitude,
-                loc.latitude
-            )
-            val destinationMarker = Point.fromLngLat(destination.longitude, destination.latitude)
-
-            // Initialize the directionsApiClient object for eventually drawing a navigation route on the map
-            val directionsApiClient = MapboxDirections.builder()
-                .origin(mockCurrentLocation)
-                .destination(destinationMarker)
-                .overview(DirectionsCriteria.OVERVIEW_FULL)
-                .profile(DirectionsCriteria.PROFILE_DRIVING)
-                .accessToken(getString(R.string.access_token))
-                .build()
-
-            directionsApiClient.enqueueCall(object : Callback<DirectionsResponse> {
-                override fun onResponse(call: Call<DirectionsResponse>, response: Response<DirectionsResponse>) {
-                    // Check that the response isn't null and that the response has a route
-                    when {
-                        response.body() == null -> Log.e(
-                            "MapActivity",
-                            "No routes found, make sure you set the right user and access token."
-                        )
-                        response.body()!!.routes().size < 1 -> Log.e("MapActivity", "No routes found")
-                        else -> {
-                            // Retrieve and draw the navigation route on the map
-                            val currentRoute = response.body()!!.routes()[0]
-                            drawNavigationPolylineRoute(currentRoute)
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<DirectionsResponse>, throwable: Throwable) {
-                    Log.e("MapActivity", "Failure")
-                }
-            })
-
-        }
-    }
-
     private fun drawNavigationPolylineRoute(route: DirectionsRoute) {
         // Check for and remove a previously-drawn navigation route polyline before drawing the new one
-        if (mapboxMap.polylines.size > 0) {
-            mapboxMap.removePolyline(mapboxMap.polylines[0])
+        if (mapBoxMap.polylines.size > 0) {
+            mapBoxMap.removePolyline(mapBoxMap.polylines[0])
         }
 
         // Convert LineString coordinates into a LatLng[]
@@ -278,7 +221,7 @@ class MapFragment : Fragment(), LocationEngineListener {
         }
 
         // Draw the navigation route polyline on to the map
-        mapboxMap.addPolyline(
+        mapBoxMap.addPolyline(
             PolylineOptions()
                 .add(*polylineDirectionsPoints)
                 .color(navigationLineColor)
@@ -296,7 +239,7 @@ class MapFragment : Fragment(), LocationEngineListener {
             ActivityCompat.requestPermissions(
                 this.requireActivity(),
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                Permissions.LOCATION
+                PermissionsConst.LOCATION
             )
         } else {
             locationComponent.activateLocationComponent(requireActivity())

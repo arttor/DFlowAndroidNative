@@ -4,6 +4,7 @@ import android.app.Application
 import com.mapbox.mapboxsdk.Mapbox
 import com.squareup.picasso.Picasso
 import com.tsystems.r2b.dflow.data.local.DFlowDb
+import com.tsystems.r2b.dflow.util.ResourcesConst
 
 class DFlowApp : Application() {
 
@@ -18,5 +19,6 @@ class DFlowApp : Application() {
             picasso.isLoggingEnabled = true
         }
         Picasso.setSingletonInstance(picasso)
+        ResourcesConst.init(applicationContext)
     }
 }
