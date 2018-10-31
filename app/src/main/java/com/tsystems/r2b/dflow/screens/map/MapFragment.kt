@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.mapbox.android.core.location.LocationEngineListener
 import com.mapbox.mapboxsdk.annotations.Icon
 import com.mapbox.mapboxsdk.annotations.IconFactory
@@ -40,6 +41,12 @@ class MapFragment : Fragment(), LocationEngineListener {
     private val stationIcon: Icon by lazy(LazyThreadSafetyMode.NONE) {
         IconFactory.getInstance(requireContext()).fromResource(R.drawable.ic_charging_station)
     }
+    private val carSelectedIcon: Icon by lazy(LazyThreadSafetyMode.NONE) {
+        IconFactory.getInstance(requireContext()).fromResource(R.drawable.ic_car_selected)
+    }
+    private val stationSelectedIcon: Icon by lazy(LazyThreadSafetyMode.NONE) {
+        IconFactory.getInstance(requireContext()).fromResource(R.drawable.ic_charging_station_selected)
+    }
 
     private lateinit var mapboxMap: MapboxMap
     private var component: LocationComponent? = null
@@ -50,7 +57,16 @@ class MapFragment : Fragment(), LocationEngineListener {
     ): View? {
         val binding = MapFragmentBinding.inflate(inflater, container, false)
         binding.mapObjectsList.layoutManager = LinearLayoutManagerWithSmoothScroller(requireContext())
-        val adapter = MapLocationsAdapter()
+        val adapter = MapLocationsAdapter {
+            mapboxMap.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(
+                        it.latitude,
+                        it.longitude
+                    ), 13.0
+                )
+            )
+        }
         binding.mapObjectsList.adapter = adapter
         binding.setLifecycleOwner(this)
         val snapHelper = LinearSnapHelper()
@@ -72,17 +88,20 @@ class MapFragment : Fragment(), LocationEngineListener {
             if (mapLocations != null && mapLocations.isNotEmpty())
                 adapter.submitList(mapLocations)
             mapView.getMapAsync {
-                for(marker in it.markers){
+                for (marker in it.markers) {
                     it.removeMarker(marker)
                 }
-                for(location in mapLocations){
-                    it.addMarker(MarkerOptions()
-                        .position(location.latLng)
-                        .title(location.name)
-                        .icon(when(location.type){
-                            LocationType.CAR -> carIcon
-                            LocationType.STATION -> stationIcon
-                        })
+                for (location in mapLocations) {
+                    it.addMarker(
+                        MarkerOptions()
+                            .position(location.latLng)
+                            .title(location.name)
+                            .icon(
+                                when (location.type) {
+                                    LocationType.CAR -> carIcon
+                                    LocationType.STATION -> stationIcon
+                                }
+                            )
                     )
                 }
             }
@@ -97,6 +116,7 @@ class MapFragment : Fragment(), LocationEngineListener {
             component = mapboxMap.locationComponent
             enableUserLocation(it)
         }
+        setUpMarkerClickListener(map_objects_list)
     }
 
     override fun onStart() {
@@ -154,6 +174,24 @@ class MapFragment : Fragment(), LocationEngineListener {
         }
     }
 
+    private fun setUpMarkerClickListener(recyclerView: RecyclerView) {
+        mapView.getMapAsync {
+            it.setOnMarkerClickListener {
+                val positionOfSelectedMarker = it.getPosition();
+
+                mapboxMap.markers.forEachIndexed { index, marker ->
+                    if (positionOfSelectedMarker == marker.position) {
+                        recyclerView.smoothScrollToPosition(index)
+                        // marker.icon
+                    }
+                }
+                //setup icon change and route here
+                // return true to not show title
+                false
+            }
+        }
+    }
+
     private fun enableUserLocation(mapboxMap: MapboxMap) {
         val locationComponent = mapboxMap.locationComponent
         // Activate with options
@@ -171,26 +209,28 @@ class MapFragment : Fragment(), LocationEngineListener {
             locationComponent.isLocationComponentEnabled = true
             locationComponent.locationEngine?.addLocationEngineListener(this)
             locationComponent.lastKnownLocation?.let {
+                val latLng = LatLng(
+                    it.latitude,
+                    it.longitude
+                )
                 mapboxMap.animateCamera(
                     CameraUpdateFactory.newLatLngZoom(
-                        LatLng(
-                            it.latitude,
-                            it.longitude
-                        ), 13.0
+                        latLng, 13.0
                     )
                 )
-                mapViewModel.getNearbyLocations(
-                    LatLng(
-                        it.latitude,
-                        it.longitude
-                    )
-                )
+                mapViewModel.currentPosition = latLng
+                mapViewModel.getNearbyLocations(latLng)
             }
         }
     }
 
     override fun onLocationChanged(location: Location?) {
-
+        location?.let {
+            mapViewModel.currentPosition = LatLng(
+                it.latitude,
+                it.longitude
+            )
+        }
     }
 
     override fun onConnected() {
