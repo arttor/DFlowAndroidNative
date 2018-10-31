@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +16,17 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.mapbox.android.core.location.LocationEngineListener
+import com.mapbox.api.directions.v5.DirectionsCriteria
+import com.mapbox.api.directions.v5.MapboxDirections
+import com.mapbox.api.directions.v5.models.DirectionsResponse
+import com.mapbox.api.directions.v5.models.DirectionsRoute
+import com.mapbox.core.constants.Constants
+import com.mapbox.geojson.LineString
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.annotations.Icon
 import com.mapbox.mapboxsdk.annotations.IconFactory
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
+import com.mapbox.mapboxsdk.annotations.PolylineOptions
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponent
@@ -28,9 +37,14 @@ import com.tsystems.r2b.dflow.model.LocationType
 import com.tsystems.r2b.dflow.util.Permissions
 import kotlinx.android.synthetic.main.map_fragment.*
 import org.jetbrains.anko.longToast
+import org.jetbrains.anko.toast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MapFragment : Fragment(), LocationEngineListener {
+    private val NAVIGATION_LINE_WIDTH = 9f
 
     private val mapViewModel: MapViewModel by lazy(LazyThreadSafetyMode.NONE) {
         ViewModelProviders.of(this).get(MapViewModel::class.java)
@@ -46,6 +60,9 @@ class MapFragment : Fragment(), LocationEngineListener {
     }
     private val stationSelectedIcon: Icon by lazy(LazyThreadSafetyMode.NONE) {
         IconFactory.getInstance(requireContext()).fromResource(R.drawable.ic_charging_station_selected)
+    }
+    private val navigationLineColor: Int by lazy(LazyThreadSafetyMode.NONE) {
+        ContextCompat.getColor(requireContext(), R.color.colorPrimary)
     }
 
     private lateinit var mapboxMap: MapboxMap
@@ -153,6 +170,7 @@ class MapFragment : Fragment(), LocationEngineListener {
         super.onDestroyView()
         mapView.onDestroy()
         component?.locationEngine?.removeLocationEngineListener(this)
+        component?.locationEngine?.removeLocationUpdates()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -186,10 +204,86 @@ class MapFragment : Fragment(), LocationEngineListener {
                     }
                 }
                 //setup icon change and route here
+                getInformationFromDirectionsApi(positionOfSelectedMarker)
                 // return true to not show title
                 false
             }
         }
+    }
+
+
+    private fun getInformationFromDirectionsApi(
+        destination: LatLng
+    ) {
+        if (mapViewModel.currentPosition == null) {
+            requireActivity().toast(R.string.not_able_to_obtain_device_location)
+        } else {
+            val loc = mapViewModel.currentPosition as LatLng
+            // Set up origin and destination coordinates for the call to the Mapbox Directions API
+            val mockCurrentLocation = Point.fromLngLat(
+                loc.longitude,
+                loc.latitude
+            )
+            val destinationMarker = Point.fromLngLat(destination.longitude, destination.latitude)
+
+            // Initialize the directionsApiClient object for eventually drawing a navigation route on the map
+            val directionsApiClient = MapboxDirections.builder()
+                .origin(mockCurrentLocation)
+                .destination(destinationMarker)
+                .overview(DirectionsCriteria.OVERVIEW_FULL)
+                .profile(DirectionsCriteria.PROFILE_DRIVING)
+                .accessToken(getString(R.string.access_token))
+                .build()
+
+            directionsApiClient.enqueueCall(object : Callback<DirectionsResponse> {
+                override fun onResponse(call: Call<DirectionsResponse>, response: Response<DirectionsResponse>) {
+                    // Check that the response isn't null and that the response has a route
+                    when {
+                        response.body() == null -> Log.e(
+                            "MapActivity",
+                            "No routes found, make sure you set the right user and access token."
+                        )
+                        response.body()!!.routes().size < 1 -> Log.e("MapActivity", "No routes found")
+                        else -> {
+                            // Retrieve and draw the navigation route on the map
+                            val currentRoute = response.body()!!.routes()[0]
+                            drawNavigationPolylineRoute(currentRoute)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<DirectionsResponse>, throwable: Throwable) {
+                    Log.e("MapActivity", "Failure")
+                }
+            })
+
+        }
+    }
+
+    private fun drawNavigationPolylineRoute(route: DirectionsRoute) {
+        // Check for and remove a previously-drawn navigation route polyline before drawing the new one
+        if (mapboxMap.polylines.size > 0) {
+            mapboxMap.removePolyline(mapboxMap.polylines[0])
+        }
+
+        // Convert LineString coordinates into a LatLng[]
+        val lineString = LineString.fromPolyline(route.geometry()!!, Constants.PRECISION_6)
+        val coordinates = lineString.coordinates()
+        val polylineDirectionsPoints = arrayOfNulls<LatLng>(coordinates.size)
+        for (i in coordinates.indices) {
+            polylineDirectionsPoints[i] = LatLng(
+                coordinates[i].latitude(),
+                coordinates[i].longitude()
+            )
+        }
+
+        // Draw the navigation route polyline on to the map
+        mapboxMap.addPolyline(
+            PolylineOptions()
+                .add(*polylineDirectionsPoints)
+                .color(navigationLineColor)
+                .width(NAVIGATION_LINE_WIDTH)
+        )
     }
 
     private fun enableUserLocation(mapboxMap: MapboxMap) {
@@ -207,7 +301,9 @@ class MapFragment : Fragment(), LocationEngineListener {
         } else {
             locationComponent.activateLocationComponent(requireActivity())
             locationComponent.isLocationComponentEnabled = true
+            locationComponent.locationEngine?.activate()
             locationComponent.locationEngine?.addLocationEngineListener(this)
+            locationComponent.locationEngine?.requestLocationUpdates()
             locationComponent.lastKnownLocation?.let {
                 val latLng = LatLng(
                     it.latitude,
