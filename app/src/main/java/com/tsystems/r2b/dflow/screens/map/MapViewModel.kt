@@ -30,7 +30,6 @@ class MapViewModel : ViewModel() {
             // Set up origin and destination coordinates for the call to the Mapbox Directions API
             val mockCurrentLocation = Point.fromLngLat(
                 currPosition.longitude,
-
                 currPosition.latitude
             )
             val destinationMarker = Point.fromLngLat(destination.longitude, destination.latitude)

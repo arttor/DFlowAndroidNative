@@ -35,7 +35,6 @@ android {
 
 dependencies {
     kapt "androidx.room:room-compiler:$rootProject.roomVersion"
-    //implementation "android.arch.work:work-runtime-ktx:$rootProject.workVersion"
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
     implementation "androidx.core:core-ktx:$rootProject.ktxVersion"
