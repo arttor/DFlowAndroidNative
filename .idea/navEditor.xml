@@ -13,8 +13,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-198" />
-                            <option name="y" value="-166" />
+                            <option name="x" value="-125" />
+                            <option name="y" value="73" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -34,30 +34,13 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-192" />
-                            <option name="y" value="147" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
-                  <entry key="startFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="-409" />
-                            <option name="y" value="-23" />
+                            <option name="x" value="147" />
+                            <option name="y" value="83" />
                           </Point>
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_startFragment_to_loginFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_startFragment_to_mapFragment">
+                            <entry key="action_mapFragment_to_loginFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
