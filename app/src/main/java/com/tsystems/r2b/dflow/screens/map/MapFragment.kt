@@ -1,6 +1,7 @@
 package com.tsystems.r2b.dflow.screens.map
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -15,6 +16,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.mapbox.android.core.location.LocationEngineListener
+import com.mapbox.android.core.location.LocationEnginePriority
+import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.core.constants.Constants
 import com.mapbox.geojson.LineString
@@ -35,7 +38,7 @@ import kotlinx.android.synthetic.main.map_fragment.*
 import org.jetbrains.anko.longToast
 
 
-class MapFragment : Fragment(), LocationEngineListener {
+class MapFragment : Fragment() {
     private val NAVIGATION_LINE_WIDTH = 9f
 
     private val mapViewModel: MapViewModel by lazy(LazyThreadSafetyMode.NONE) {
@@ -113,7 +116,7 @@ class MapFragment : Fragment(), LocationEngineListener {
         })
 
         mapViewModel.route.observe(viewLifecycleOwner, Observer { route ->
-            route?.let{
+            route?.let {
                 drawNavigationPolylineRoute(it)
             }
         })
@@ -163,7 +166,7 @@ class MapFragment : Fragment(), LocationEngineListener {
     override fun onDestroyView() {
         super.onDestroyView()
         mapView.onDestroy()
-        component?.locationEngine?.removeLocationEngineListener(this)
+        //component?.locationEngine?.removeLocationEngineListener(this)
         component?.locationEngine?.removeLocationUpdates()
     }
 
@@ -233,46 +236,46 @@ class MapFragment : Fragment(), LocationEngineListener {
         val locationComponent = mapboxMap.locationComponent
         // Activate with options
         if (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
 
             ActivityCompat.requestPermissions(
                 this.requireActivity(),
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
                 PermissionsConst.LOCATION
             )
         } else {
-            locationComponent.activateLocationComponent(requireActivity())
+            val engine = LocationEngineProvider(requireContext()).obtainBestLocationEngineAvailable()
+            engine.priority = LocationEnginePriority.HIGH_ACCURACY
+            // engine
+            locationComponent.activateLocationComponent(requireActivity(), engine)
             locationComponent.isLocationComponentEnabled = true
+            locationComponent.locationEngine?.addLocationEngineListener(object : LocationEngineListener {
+                override fun onLocationChanged(location: Location?) {
+                    location?.let {
+                        val latLng = LatLng(
+                            it.latitude,
+                            it.longitude
+                        )
+                        mapboxMap.animateCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                latLng, 13.0
+                            )
+                        )
+                        mapViewModel.currentPosition = latLng
+                        mapViewModel.getNearbyLocations(latLng)
+                    }
+                    locationComponent.locationEngine?.removeLocationEngineListener(this)
+                }
+
+                @SuppressLint("MissingPermission")
+                override fun onConnected() {
+                    locationComponent.locationEngine?.requestLocationUpdates()
+                }
+            })
             locationComponent.locationEngine?.activate()
-            locationComponent.locationEngine?.addLocationEngineListener(this)
-            locationComponent.locationEngine?.requestLocationUpdates()
-            locationComponent.lastKnownLocation?.let {
-                val latLng = LatLng(
-                    it.latitude,
-                    it.longitude
-                )
-                mapboxMap.animateCamera(
-                    CameraUpdateFactory.newLatLngZoom(
-                        latLng, 13.0
-                    )
-                )
-                mapViewModel.currentPosition = latLng
-                mapViewModel.getNearbyLocations(latLng)
-            }
         }
-    }
-
-    override fun onLocationChanged(location: Location?) {
-        location?.let {
-            mapViewModel.currentPosition = LatLng(
-                it.latitude,
-                it.longitude
-            )
-        }
-    }
-
-    override fun onConnected() {
-
     }
 }

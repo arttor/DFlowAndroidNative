@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(
-            Navigation.findNavController(this, R.id.nav_fragment),appBarConfiguration
+            Navigation.findNavController(this, R.id.nav_fragment), appBarConfiguration
         )
     }
 
@@ -71,9 +71,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        supportFragmentManager.fragments.filter { it.isVisible }.forEach {
-            it.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        }
+        supportFragmentManager.findFragmentById(R.id.nav_fragment)?.childFragmentManager
+            ?.fragments?.get(0)?.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     fun lockDrawer(lock: Boolean) {
