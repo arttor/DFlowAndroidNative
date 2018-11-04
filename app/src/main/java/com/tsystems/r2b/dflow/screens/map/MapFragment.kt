@@ -2,8 +2,12 @@ package com.tsystems.r2b.dflow.screens.map
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +38,7 @@ import com.tsystems.r2b.dflow.R
 import com.tsystems.r2b.dflow.databinding.MapFragmentBinding
 import com.tsystems.r2b.dflow.model.LocationType
 import com.tsystems.r2b.dflow.model.MapLocation
+import com.tsystems.r2b.dflow.util.Injector
 import com.tsystems.r2b.dflow.util.PermissionsConst
 import com.tsystems.r2b.dflow.util.SnapOnScrollListener
 import kotlinx.android.synthetic.main.map_fragment.*
@@ -43,9 +48,14 @@ import org.jetbrains.anko.longToast
 class MapFragment : Fragment() {
     private val NAVIGATION_LINE_WIDTH = 9f
 
+    private lateinit var currentContext: Context
+    private lateinit var binding: MapFragmentBinding
+
     private val mapViewModel: MapViewModel by lazy(LazyThreadSafetyMode.NONE) {
-        ViewModelProviders.of(this).get(MapViewModel::class.java)
+        val factory = Injector.getMapViewModelFactory(currentContext)
+        ViewModelProviders.of(this, factory).get(MapViewModel::class.java)
     }
+
     private val carIcon: Icon by lazy(LazyThreadSafetyMode.NONE) {
         IconFactory.getInstance(requireContext()).fromResource(R.drawable.ic_car)
     }
@@ -74,7 +84,10 @@ class MapFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = MapFragmentBinding.inflate(inflater, container, false)
+        binding = MapFragmentBinding.inflate(inflater, container, false)
+
+        currentContext = context ?: return binding.root
+
         binding.mapObjectsList.layoutManager = LinearLayoutManagerWithSmoothScroller(requireContext())
         val adapter = MapLocationsAdapter(onLocationClickListener)
         binding.mapObjectsList.adapter = adapter
@@ -239,11 +252,11 @@ class MapFragment : Fragment() {
                 .width(NAVIGATION_LINE_WIDTH)
         )
 
-        val latLngBounds =  LatLngBounds.Builder()
+        val latLngBounds = LatLngBounds.Builder()
             .includes(polylineDirectionsPoints.toMutableList())
             .build()
 
-        mapBoxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50,50,50,700), 2000)
+        mapBoxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50, 50, 50, 700), 2000)
     }
 
     private fun enableUserLocation(mapboxMap: MapboxMap) {
@@ -261,6 +274,19 @@ class MapFragment : Fragment() {
                 PermissionsConst.LOCATION
             )
         } else {
+            if (isGeoLocationDisabled()) {
+                // TODO: switch to using GP services like in Google or Yandex Maps instead of redirecting to settings
+                AlertDialog.Builder(context)
+                    .setCancelable(false)
+                    .setMessage(R.string.gps_disabled)
+                    .setPositiveButton(
+                        R.string.enable
+                    ) { _, _ -> startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)) }
+                    .setNegativeButton(R.string.disable) { dialog, _ -> dialog.cancel() }
+                    .create()
+                    .show()
+            }
+
             val engine = LocationEngineProvider(requireContext()).obtainBestLocationEngineAvailable()
             engine.priority = LocationEnginePriority.HIGH_ACCURACY
             // engine
@@ -291,5 +317,11 @@ class MapFragment : Fragment() {
             })
             locationComponent.locationEngine?.activate()
         }
+    }
+
+    private fun isGeoLocationDisabled(): Boolean {
+        val locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return !locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+                !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 }
