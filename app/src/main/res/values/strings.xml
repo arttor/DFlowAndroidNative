@@ -10,6 +10,9 @@
     <string name="user_location_permission_not_granted">User location permission not granted</string>
     <string name="user_location_permission_explanation">This app needs location permissions in order to show its functionality.</string>
     <string name="not_able_to_obtain_device_location">Not able to obtain device location.</string>
+    <string name="gps_disabled">GPS is disabled. Turn it on?</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="map_location_image">Image of %1$s</string>

@@ -2,8 +2,12 @@ package com.tsystems.r2b.dflow.screens.map
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -252,6 +256,18 @@ class MapFragment : Fragment() {
     }
 
     private fun enableUserLocation(mapboxMap: MapboxMap) {
+        if (isGeoLocationDisabled()) {
+            AlertDialog.Builder(context)
+                .setCancelable(false)
+                .setMessage(R.string.gps_disabled)
+                .setPositiveButton(
+                    R.string.enable
+                ) { _, _ -> startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)) }
+                .setNegativeButton(R.string.disable) { dialog, _ -> dialog.cancel() }
+                .create()
+                .show()
+        }
+
         val locationComponent = mapboxMap.locationComponent
         // Activate with options
         if (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -296,5 +312,11 @@ class MapFragment : Fragment() {
             })
             locationComponent.locationEngine?.activate()
         }
+    }
+
+    private fun isGeoLocationDisabled(): Boolean {
+        val locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return !locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+                !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 }
