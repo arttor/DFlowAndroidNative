@@ -1,31 +1,34 @@
 package com.tsystems.r2b.dflow.data.repository
 
-import androidx.lifecycle.LiveData
-import com.tsystems.r2b.dflow.data.local.DFlowDb
+import com.tsystems.r2b.dflow.data.local.dao.UserDao
 import com.tsystems.r2b.dflow.model.User
 import org.jetbrains.anko.doAsync
 
+class UserRepository private constructor(private val userDao: UserDao) {
+    fun get() = userDao.load()
 
-object UserRepository {
-    fun get(): LiveData<User> {
-        return DFlowDb.dbInstance!!.userDao().load()
-    }
-
-    fun create(user: User) {
+    fun create(user: User) =
         doAsync {
-            DFlowDb.dbInstance!!.userDao().create(user)
+            userDao.create(user)
         }
-    }
 
-    fun update(user: User) {
+    fun update(user: User) =
         doAsync {
-            DFlowDb.dbInstance!!.userDao().update(user)
+            userDao.update(user)
         }
-    }
 
-    fun deleteAll() {
+    fun deleteAll() =
         doAsync {
-            DFlowDb.dbInstance!!.userDao().deleteAll()
+            userDao.deleteAll()
         }
+
+    companion object {
+        @Volatile
+        private var instance: UserRepository? = null
+
+        fun getInstance(userDao: UserDao) =
+            instance ?: synchronized(this) {
+                instance ?: UserRepository(userDao).also { instance = it }
+            }
     }
 }

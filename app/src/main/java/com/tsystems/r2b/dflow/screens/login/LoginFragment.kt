@@ -11,16 +11,21 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import com.tsystems.r2b.dflow.MainActivity
 import com.tsystems.r2b.dflow.databinding.LoginFragmentBinding
+import com.tsystems.r2b.dflow.util.Injector
 
 
 class LoginFragment : Fragment() {
-    private val loginViewModel: LoginViewModel by lazy(LazyThreadSafetyMode.NONE) {
-        ViewModelProviders.of(this).get(LoginViewModel::class.java)
-    }
+    private lateinit var loginViewModel: LoginViewModel
+
     private lateinit var rootView: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = LoginFragmentBinding.inflate(inflater, container, false)
+
+        val context = context ?: return binding.root
+        val factory = Injector.getLoginViewModelFactory(context)
+        loginViewModel = ViewModelProviders.of(this, factory).get(LoginViewModel::class.java)
+
         binding.model = loginViewModel
         binding.login = View.OnClickListener {
             loginViewModel.login()

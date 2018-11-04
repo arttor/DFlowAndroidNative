@@ -10,22 +10,28 @@ import com.tsystems.r2b.dflow.data.local.dao.UserDao
 import com.tsystems.r2b.dflow.model.MapLocation
 import com.tsystems.r2b.dflow.model.User
 
-@Database(entities = arrayOf(User::class,MapLocation::class), version = 1)
+@Database(entities = [User::class, MapLocation::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class DFlowDb : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun mapLocationDao(): MapLocationDao
 
     companion object {
-        private const val databaseName = "d-flow-db"
+        private const val DATABASE_NAME = "d-flow-db"
 
-        var dbInstance: DFlowDb? = null
-        fun init(context: Context) {
-            if (dbInstance == null) {
-                //TODO:uncomment to clean db on application start. add schema versioning later
-                context.deleteDatabase(databaseName)
-                dbInstance = Room.databaseBuilder(context, DFlowDb::class.java, databaseName).build()
+        @Volatile
+        private var dbInstance: DFlowDb? = null
+
+        fun getInstance(context: Context): DFlowDb {
+            return dbInstance ?: synchronized(this) {
+                dbInstance ?: init(context).also { dbInstance = it }
             }
+        }
+
+        private fun init(context: Context): DFlowDb {
+            //TODO:uncomment to clean db on application start. add schema versioning later
+            context.deleteDatabase(DATABASE_NAME)
+            return Room.databaseBuilder(context, DFlowDb::class.java, DATABASE_NAME).build()
         }
     }
 }

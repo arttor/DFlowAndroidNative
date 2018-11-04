@@ -12,6 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.tsystems.r2b.dflow.databinding.ActivityMainBinding
+import com.tsystems.r2b.dflow.util.Injector
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -19,12 +20,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    private val mainViewModel: MainViewModel by lazy(LazyThreadSafetyMode.NONE) {
-        ViewModelProviders.of(this).get(MainViewModel::class.java)
-    }
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        val factory = Injector.getMainViewModelFactory(this)
+        mainViewModel = ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
+
         mainViewModel.user.observe(this, Observer {
             val navController = Navigation.findNavController(this, R.id.nav_fragment)
             if (it == null) {
@@ -32,7 +37,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         drawerLayout = binding.drawerLayout
 
         val navController = Navigation.findNavController(this, R.id.nav_fragment)

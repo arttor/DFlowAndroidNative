@@ -34,6 +34,7 @@ import com.tsystems.r2b.dflow.R
 import com.tsystems.r2b.dflow.databinding.MapFragmentBinding
 import com.tsystems.r2b.dflow.model.LocationType
 import com.tsystems.r2b.dflow.model.MapLocation
+import com.tsystems.r2b.dflow.util.Injector
 import com.tsystems.r2b.dflow.util.PermissionsConst
 import com.tsystems.r2b.dflow.util.SnapOnScrollListener
 import kotlinx.android.synthetic.main.map_fragment.*
@@ -43,9 +44,8 @@ import org.jetbrains.anko.longToast
 class MapFragment : Fragment() {
     private val NAVIGATION_LINE_WIDTH = 9f
 
-    private val mapViewModel: MapViewModel by lazy(LazyThreadSafetyMode.NONE) {
-        ViewModelProviders.of(this).get(MapViewModel::class.java)
-    }
+    private lateinit var mapViewModel: MapViewModel
+
     private val carIcon: Icon by lazy(LazyThreadSafetyMode.NONE) {
         IconFactory.getInstance(requireContext()).fromResource(R.drawable.ic_car)
     }
@@ -75,6 +75,11 @@ class MapFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val binding = MapFragmentBinding.inflate(inflater, container, false)
+
+        val context = context ?: return binding.root
+        val factory = Injector.getMapViewModelFactory(context)
+        mapViewModel = ViewModelProviders.of(this, factory).get(MapViewModel::class.java)
+
         binding.mapObjectsList.layoutManager = LinearLayoutManagerWithSmoothScroller(requireContext())
         val adapter = MapLocationsAdapter(onLocationClickListener)
         binding.mapObjectsList.adapter = adapter
@@ -239,11 +244,11 @@ class MapFragment : Fragment() {
                 .width(NAVIGATION_LINE_WIDTH)
         )
 
-        val latLngBounds =  LatLngBounds.Builder()
+        val latLngBounds = LatLngBounds.Builder()
             .includes(polylineDirectionsPoints.toMutableList())
             .build()
 
-        mapBoxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50,50,50,700), 2000)
+        mapBoxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50, 50, 50, 700), 2000)
     }
 
     private fun enableUserLocation(mapboxMap: MapboxMap) {

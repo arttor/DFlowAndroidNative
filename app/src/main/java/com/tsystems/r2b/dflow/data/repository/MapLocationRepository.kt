@@ -1,25 +1,30 @@
 package com.tsystems.r2b.dflow.data.repository
 
-import androidx.lifecycle.LiveData
-import com.tsystems.r2b.dflow.data.local.DFlowDb
+import com.tsystems.r2b.dflow.data.local.dao.MapLocationDao
 import com.tsystems.r2b.dflow.model.MapLocation
 import org.jetbrains.anko.doAsync
 
+class MapLocationRepository private constructor(private val mapLocationDao: MapLocationDao) {
 
-object MapLocationRepository {
-    fun getAll(): LiveData<List<MapLocation>> {
-        return DFlowDb.dbInstance!!.mapLocationDao().load()
-    }
+    fun getAll() = mapLocationDao.load()
 
-    fun create(mapLocation: MapLocation) {
+    fun create(mapLocation: MapLocation) =
         doAsync {
-            DFlowDb.dbInstance!!.mapLocationDao().create(mapLocation)
+            mapLocationDao.create(mapLocation)
         }
-    }
 
-    fun deleteAll() {
+    fun deleteAll() =
         doAsync {
-            DFlowDb.dbInstance!!.mapLocationDao().deleteAll()
+            mapLocationDao.deleteAll()
         }
+
+    companion object {
+        @Volatile
+        private var instance: MapLocationRepository? = null
+
+        fun getInstance(mapLocationDao: MapLocationDao) =
+            instance ?: synchronized(this) {
+                instance ?: MapLocationRepository(mapLocationDao).also { instance = it }
+            }
     }
 }

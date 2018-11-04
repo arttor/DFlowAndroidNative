@@ -18,9 +18,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
-class MapViewModel : ViewModel() {
-    val locations: LiveData<List<MapLocation>> = MapLocationRepository.getAll()
+class MapViewModel constructor(private val mapLocationRepository: MapLocationRepository) : ViewModel() {
+    val locations: LiveData<List<MapLocation>> = mapLocationRepository.getAll()
     var currentPosition: LatLng? = null
     val route: MutableLiveData<DirectionsRoute?> = MutableLiveData()
 
@@ -67,9 +66,8 @@ class MapViewModel : ViewModel() {
         }
     }
 
-
     fun getNearbyLocations(userLocation: LatLng) {
-        MapLocationRepository.create(
+        mapLocationRepository.create(
             MapLocation(
                 "Jaguar E Pace", LocationType.CAR,
                 userLocation.latitude + 0.02,
@@ -77,7 +75,7 @@ class MapViewModel : ViewModel() {
                 "http://grantandgreen.de/wp-content/uploads/2018/03/Jag-E-Pace-BS-Blue.jpg"
             )
         )
-        MapLocationRepository.create(
+        mapLocationRepository.create(
             MapLocation(
                 "Tesla", LocationType.CAR,
                 userLocation.latitude - 0.05,
@@ -85,7 +83,7 @@ class MapViewModel : ViewModel() {
                 "https://05a56bcbb6bd8e964f64-5f63a9a90be9c7873869b0beb9b45e3c.ssl.cf1.rackcdn.com/5YJSA1H1XEFP34954/9c702abaffc83a804232b802de6828bc.jpg"
             )
         )
-        MapLocationRepository.create(
+        mapLocationRepository.create(
             MapLocation(
                 "Also a car", LocationType.CAR,
                 userLocation.latitude + 0.07,
@@ -93,7 +91,7 @@ class MapViewModel : ViewModel() {
                 "https://i.pinimg.com/originals/a3/40/53/a34053f7922b8cc610030e42d456a239.jpg"
             )
         )
-        MapLocationRepository.create(
+        mapLocationRepository.create(
             MapLocation(
                 "Station #42", LocationType.STATION,
                 userLocation.latitude - 0.05,

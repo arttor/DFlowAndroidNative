@@ -6,13 +6,13 @@ import com.tsystems.r2b.dflow.model.User
 import java.util.*
 
 
-class LoginViewModel : ViewModel() {
-    var username: String?=null
-    var password: String?=null
+class LoginViewModel constructor(private val userRepository: UserRepository) : ViewModel() {
+    var username: String? = null
+    var password: String? = null
 
-    fun login (){
-        username?.let{
-            UserRepository.create(User(it, Date()))
+    fun login() {
+        username?.let {
+            userRepository.create(User(it, Date()))
         }
     }
 }
