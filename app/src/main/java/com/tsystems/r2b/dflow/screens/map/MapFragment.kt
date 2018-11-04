@@ -256,18 +256,6 @@ class MapFragment : Fragment() {
     }
 
     private fun enableUserLocation(mapboxMap: MapboxMap) {
-        if (isGeoLocationDisabled()) {
-            AlertDialog.Builder(context)
-                .setCancelable(false)
-                .setMessage(R.string.gps_disabled)
-                .setPositiveButton(
-                    R.string.enable
-                ) { _, _ -> startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)) }
-                .setNegativeButton(R.string.disable) { dialog, _ -> dialog.cancel() }
-                .create()
-                .show()
-        }
-
         val locationComponent = mapboxMap.locationComponent
         // Activate with options
         if (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -282,6 +270,18 @@ class MapFragment : Fragment() {
                 PermissionsConst.LOCATION
             )
         } else {
+            if (isGeoLocationDisabled()) {
+                AlertDialog.Builder(context)
+                    .setCancelable(false)
+                    .setMessage(R.string.gps_disabled)
+                    .setPositiveButton(
+                        R.string.enable
+                    ) { _, _ -> startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)) }
+                    .setNegativeButton(R.string.disable) { dialog, _ -> dialog.cancel() }
+                    .create()
+                    .show()
+            }
+
             val engine = LocationEngineProvider(requireContext()).obtainBestLocationEngineAvailable()
             engine.priority = LocationEnginePriority.HIGH_ACCURACY
             // engine
