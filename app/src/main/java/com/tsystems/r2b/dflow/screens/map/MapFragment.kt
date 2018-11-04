@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.mapbox.android.core.location.LocationEngineListener
 import com.mapbox.android.core.location.LocationEnginePriority
@@ -27,6 +27,7 @@ import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.annotations.PolylineOptions
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.tsystems.r2b.dflow.R
@@ -34,6 +35,7 @@ import com.tsystems.r2b.dflow.databinding.MapFragmentBinding
 import com.tsystems.r2b.dflow.model.LocationType
 import com.tsystems.r2b.dflow.model.MapLocation
 import com.tsystems.r2b.dflow.util.PermissionsConst
+import com.tsystems.r2b.dflow.util.SnapOnScrollListener
 import kotlinx.android.synthetic.main.map_fragment.*
 import org.jetbrains.anko.longToast
 
@@ -77,8 +79,14 @@ class MapFragment : Fragment() {
         val adapter = MapLocationsAdapter(onLocationClickListener)
         binding.mapObjectsList.adapter = adapter
         binding.setLifecycleOwner(this)
-        val snapHelper = LinearSnapHelper()
+        val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.mapObjectsList)
+        val snapOnScrollListener = SnapOnScrollListener(snapHelper) {
+            val ad = binding.mapObjectsList.adapter as MapLocationsAdapter
+            val loc = ad.getItemByPosition(it)
+            mapViewModel.buildRouteTo(loc.latLng)
+        }
+        binding.mapObjectsList.addOnScrollListener(snapOnScrollListener)
         subscribeUi(
             adapter,
             binding
@@ -230,6 +238,12 @@ class MapFragment : Fragment() {
                 .color(navigationLineColor)
                 .width(NAVIGATION_LINE_WIDTH)
         )
+
+        val latLngBounds =  LatLngBounds.Builder()
+            .includes(polylineDirectionsPoints.toMutableList())
+            .build()
+
+        mapBoxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50,50,50,700), 2000)
     }
 
     private fun enableUserLocation(mapboxMap: MapboxMap) {

@@ -13,7 +13,8 @@ import com.tsystems.r2b.dflow.databinding.ListItemMapBinding
 import com.tsystems.r2b.dflow.model.MapLocation
 
 
-class MapLocationsAdapter(private val clickCallback: (MapLocation) -> Unit) : ListAdapter<MapLocation, MapLocationsAdapter.ViewHolder>(MapLocationDiffCallback()) {
+class MapLocationsAdapter(private val clickCallback: (MapLocation) -> Unit) :
+    ListAdapter<MapLocation, MapLocationsAdapter.ViewHolder>(MapLocationDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val location = getItem(position)
@@ -36,6 +37,9 @@ class MapLocationsAdapter(private val clickCallback: (MapLocation) -> Unit) : Li
             clickCallback(location)
         }
     }
+
+    fun getItemByPosition(position: Int) = getItem(position)
+
 
     class ViewHolder(
         private val binding: ListItemMapBinding

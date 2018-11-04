@@ -46,11 +46,9 @@ class LoginFragment : Fragment() {
     }
 
     private fun showSoftwareKeyboard(showKeyboard: Boolean) {
-        val activity = activity
-        val inputManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
+        val inputManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(
-            activity.currentFocus!!.windowToken,
+            requireActivity().currentFocus!!.windowToken,
             if (showKeyboard) InputMethodManager.SHOW_FORCED else InputMethodManager.HIDE_NOT_ALWAYS
         )
     }
