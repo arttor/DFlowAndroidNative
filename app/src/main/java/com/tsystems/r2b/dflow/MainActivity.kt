@@ -20,15 +20,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    private lateinit var mainViewModel: MainViewModel
+    private lateinit var binding: ActivityMainBinding
+
+    private val mainViewModel: MainViewModel by lazy(LazyThreadSafetyMode.NONE) {
+        val factory = Injector.getMainViewModelFactory(this)
+        ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
-        val factory = Injector.getMainViewModelFactory(this)
-        mainViewModel = ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         mainViewModel.user.observe(this, Observer {
             val navController = Navigation.findNavController(this, R.id.nav_fragment)

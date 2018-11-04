@@ -48,7 +48,13 @@ import org.jetbrains.anko.longToast
 class MapFragment : Fragment() {
     private val NAVIGATION_LINE_WIDTH = 9f
 
-    private lateinit var mapViewModel: MapViewModel
+    private lateinit var currentContext: Context
+    private lateinit var binding: MapFragmentBinding
+
+    private val mapViewModel: MapViewModel by lazy(LazyThreadSafetyMode.NONE) {
+        val factory = Injector.getMapViewModelFactory(currentContext)
+        ViewModelProviders.of(this, factory).get(MapViewModel::class.java)
+    }
 
     private val carIcon: Icon by lazy(LazyThreadSafetyMode.NONE) {
         IconFactory.getInstance(requireContext()).fromResource(R.drawable.ic_car)
@@ -78,11 +84,9 @@ class MapFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = MapFragmentBinding.inflate(inflater, container, false)
+        binding = MapFragmentBinding.inflate(inflater, container, false)
 
-        val context = context ?: return binding.root
-        val factory = Injector.getMapViewModelFactory(context)
-        mapViewModel = ViewModelProviders.of(this, factory).get(MapViewModel::class.java)
+        currentContext = context ?: return binding.root
 
         binding.mapObjectsList.layoutManager = LinearLayoutManagerWithSmoothScroller(requireContext())
         val adapter = MapLocationsAdapter(onLocationClickListener)
@@ -271,6 +275,7 @@ class MapFragment : Fragment() {
             )
         } else {
             if (isGeoLocationDisabled()) {
+                // TODO: switch to using GP services like in Google or Yandex Maps instead of redirecting to settings
                 AlertDialog.Builder(context)
                     .setCancelable(false)
                     .setMessage(R.string.gps_disabled)
