@@ -9,14 +9,18 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.mapbox.android.core.location.LocationEngineListener
@@ -34,6 +38,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.tsystems.r2b.dflow.MainViewModel
 import com.tsystems.r2b.dflow.R
 import com.tsystems.r2b.dflow.databinding.MapFragmentBinding
 import com.tsystems.r2b.dflow.model.LocationType
@@ -54,6 +59,11 @@ class MapFragment : Fragment() {
     private val mapViewModel: MapViewModel by lazy(LazyThreadSafetyMode.NONE) {
         val factory = Injector.getMapViewModelFactory(currentContext)
         ViewModelProviders.of(this, factory).get(MapViewModel::class.java)
+    }
+
+    private val mainViewModel: MainViewModel by lazy(LazyThreadSafetyMode.NONE) {
+        val factory = Injector.getMapViewModelFactory(currentContext)
+        ViewModelProviders.of(requireActivity(), factory).get(MainViewModel::class.java)
     }
 
     private val carIcon: Icon by lazy(LazyThreadSafetyMode.NONE) {
@@ -80,6 +90,26 @@ class MapFragment : Fragment() {
         )
     }
 
+    private val bookVehicleListener: (MapLocation, ImageView) -> Unit = { location, imageView ->
+        mainViewModel.vehicleToBook = location
+        val extras = FragmentNavigatorExtras(
+            imageView to getString(R.string.bookTransitionName)
+        )
+        Navigation.findNavController(requireActivity(), R.id.nav_fragment)
+            .navigate(MapFragmentDirections.actionBookVehicle(), extras)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        postponeEnterTransition()
+
+        binding.mapObjectsList.getViewTreeObserver()
+            .addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -89,7 +119,7 @@ class MapFragment : Fragment() {
         currentContext = context ?: return binding.root
 
         binding.mapObjectsList.layoutManager = LinearLayoutManagerWithSmoothScroller(requireContext())
-        val adapter = MapLocationsAdapter(onLocationClickListener)
+        val adapter = MapLocationsAdapter(onLocationClickListener, bookVehicleListener)
         binding.mapObjectsList.adapter = adapter
         binding.setLifecycleOwner(this)
         val snapHelper = PagerSnapHelper()
@@ -104,6 +134,8 @@ class MapFragment : Fragment() {
             adapter,
             binding
         )
+        val tr = TransitionInflater.from(context).inflateTransition(R.transition.move)
+        sharedElementReturnTransition = tr
         return binding.root
     }
 

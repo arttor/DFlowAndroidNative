@@ -13,13 +13,20 @@ import com.tsystems.r2b.dflow.databinding.ListItemMapBinding
 import com.tsystems.r2b.dflow.model.MapLocation
 
 
-class MapLocationsAdapter(private val clickCallback: (MapLocation) -> Unit) :
+class MapLocationsAdapter(
+    private val clickCallback: (MapLocation) -> Unit,
+    private val bookCallback: (MapLocation, ImageView) -> Unit
+) :
     ListAdapter<MapLocation, MapLocationsAdapter.ViewHolder>(MapLocationDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val location = getItem(position)
         holder.apply {
-            bind(createOnClickListener(location), location)
+            bind(
+                createOnClickListener(location, clickCallback),
+                bookCallback,
+                location
+            )
             itemView.tag = location
         }
     }
@@ -32,9 +39,9 @@ class MapLocationsAdapter(private val clickCallback: (MapLocation) -> Unit) :
         )
     }
 
-    private fun createOnClickListener(location: MapLocation): View.OnClickListener {
+    private fun createOnClickListener(location: MapLocation, callback: (MapLocation) -> Unit): View.OnClickListener {
         return View.OnClickListener {
-            clickCallback(location)
+            callback(location)
         }
     }
 
@@ -45,9 +52,16 @@ class MapLocationsAdapter(private val clickCallback: (MapLocation) -> Unit) :
         private val binding: ListItemMapBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(listener: View.OnClickListener, item: MapLocation) {
+        fun bind(
+            clickListener: View.OnClickListener,
+            bookListener: (MapLocation, ImageView) -> Unit,
+            item: MapLocation
+        ) {
             binding.apply {
-                clickListener = listener
+                focusOnVehicleListener = clickListener
+                bookVehicleListener = View.OnClickListener {
+                    bookListener(item, binding.locationItemImage)
+                }
                 location = item
                 executePendingBindings()
             }

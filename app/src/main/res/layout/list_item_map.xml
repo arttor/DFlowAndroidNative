@@ -3,7 +3,10 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-                name="clickListener"
+                name="focusOnVehicleListener"
+                type="android.view.View.OnClickListener"/>
+        <variable
+                name="bookVehicleListener"
                 type="android.view.View.OnClickListener"/>
         <variable
                 name="location"
@@ -14,21 +17,38 @@
             android:background="@android:color/background_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="@{clickListener}"
+            android:onClick="@{focusOnVehicleListener}"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp">
 
-        <ImageView
-                android:id="@+id/location_item_image"
-                android:scaleType="centerInside"
-                android:layout_width="wrap_content"
-                android:adjustViewBounds="true"
-                android:layout_height="@dimen/map_location_item_image_height"
-                android:layout_marginTop="@dimen/margin_normal"
-                android:contentDescription="@{@string/map_location_image(location.name)}"
-                app:imageFromUrl="@{location.imageUrl}"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp"/>
+        <LinearLayout
+                android:background="@color/colorPrimary"
+                android:id="@+id/location_item_header"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <ImageView
+                    android:transitionName="@string/bookTransitionName"
+                    android:id="@+id/location_item_image"
+                    android:scaleType="centerInside"
+                    android:layout_width="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:layout_height="@dimen/map_location_item_image_height"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_marginBottom="@dimen/margin_normal"
+                    android:contentDescription="@{@string/map_location_image(location.name)}"
+                    app:imageFromUrl="@{location.imageUrl}"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"/>
+            <Button android:text="Book"
+                    android:layout_gravity="center"
+                    android:onClick="@{bookVehicleListener}"
+                    android:layout_width="0dp"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginRight="@dimen/margin_normal"
+                    android:layout_height="wrap_content" android:id="@+id/book_button"
+                    android:layout_weight="1"/>
+        </LinearLayout>
 
         <TextView
                 android:id="@+id/location_item_title"
@@ -42,7 +62,7 @@
                 android:textAppearance="?attr/textAppearanceListItem"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/location_item_image"/>
+                app:layout_constraintTop_toBottomOf="@id/location_item_header"/>
         <TextView
                 android:id="@+id/location_item_tariff"
                 android:layout_width="0dp"
