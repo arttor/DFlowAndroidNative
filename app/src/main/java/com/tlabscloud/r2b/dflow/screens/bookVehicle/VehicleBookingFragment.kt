@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.squareup.picasso.Picasso
 import com.tlabscloud.r2b.dflow.MainViewModel
-import com.tsystems.r2b.dflow.R
-import com.tsystems.r2b.dflow.databinding.FragmentVehicleBookingBinding
+import com.tlabscloud.r2b.dflow.R
+import com.tlabscloud.r2b.dflow.databinding.FragmentVehicleBookingBinding
 
 
 class VehicleBookingFragment : Fragment() {

@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import com.tlabscloud.r2b.dflow.MainActivity
 import com.tlabscloud.r2b.dflow.util.Injector
-import com.tsystems.r2b.dflow.databinding.LoginFragmentBinding
+import com.tlabscloud.r2b.dflow.databinding.LoginFragmentBinding
 
 
 class LoginFragment : Fragment() {

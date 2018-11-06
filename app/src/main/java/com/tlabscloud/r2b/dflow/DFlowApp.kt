@@ -4,8 +4,8 @@ import android.app.Application
 import com.mapbox.mapboxsdk.Mapbox
 import com.squareup.picasso.Picasso
 import com.tlabscloud.r2b.dflow.util.ResourcesConst
-import com.tsystems.r2b.dflow.BuildConfig
-import com.tsystems.r2b.dflow.R
+import com.tlabscloud.r2b.dflow.BuildConfig
+import com.tlabscloud.r2b.dflow.R
 
 class DFlowApp : Application() {
 

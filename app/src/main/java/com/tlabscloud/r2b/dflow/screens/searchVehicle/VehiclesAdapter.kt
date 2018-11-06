@@ -10,7 +10,7 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.*
 import com.squareup.picasso.Picasso
 import com.tlabscloud.r2b.dflow.model.Vehicle
-import com.tsystems.r2b.dflow.databinding.SearchVehicleListItemBinding
+import com.tlabscloud.r2b.dflow.databinding.SearchVehicleListItemBinding
 
 
 class VehiclesListAdapter(

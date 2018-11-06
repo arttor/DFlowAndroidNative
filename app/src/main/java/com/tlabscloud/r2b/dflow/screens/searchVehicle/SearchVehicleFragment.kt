@@ -43,8 +43,8 @@ import com.tlabscloud.r2b.dflow.model.Vehicle
 import com.tlabscloud.r2b.dflow.util.Injector
 import com.tlabscloud.r2b.dflow.util.PermissionsConst
 import com.tlabscloud.r2b.dflow.util.SnapOnScrollListener
-import com.tsystems.r2b.dflow.R
-import com.tsystems.r2b.dflow.databinding.SearchVehicleFragmentBinding
+import com.tlabscloud.r2b.dflow.R
+import com.tlabscloud.r2b.dflow.databinding.SearchVehicleFragmentBinding
 import kotlinx.android.synthetic.main.search_vehicle_fragment.*
 import org.jetbrains.anko.longToast
 
@@ -102,7 +102,7 @@ class SearchVehicleFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         postponeEnterTransition()
 
-        binding.searchVehiclesList.getViewTreeObserver()
+        binding.searchVehiclesList.viewTreeObserver
             .addOnPreDrawListener {
                 startPostponedEnterTransition()
                 true
@@ -294,7 +294,6 @@ class SearchVehicleFragment : Fragment() {
             ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
-
             ActivityCompat.requestPermissions(
                 this.requireActivity(),
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
@@ -316,6 +315,8 @@ class SearchVehicleFragment : Fragment() {
 
             val engine = LocationEngineProvider(requireContext()).obtainBestLocationEngineAvailable()
             engine.priority = LocationEnginePriority.HIGH_ACCURACY
+            // check position every 5 sec
+            engine.interval = 5000
             // engine
             locationComponent.activateLocationComponent(requireActivity(), engine)
             locationComponent.isLocationComponentEnabled = true
@@ -326,12 +327,12 @@ class SearchVehicleFragment : Fragment() {
                             it.latitude,
                             it.longitude
                         )
-                        if(searchVehicleViewModel.route.value==null)
-                        mapboxMap.animateCamera(
-                            CameraUpdateFactory.newLatLngZoom(
-                                latLng, 13.0
+                        if (searchVehicleViewModel.route.value == null)
+                            mapboxMap.animateCamera(
+                                CameraUpdateFactory.newLatLngZoom(
+                                    latLng, 13.0
+                                )
                             )
-                        )
                         searchVehicleViewModel.getNearbyLocations(latLng)
 
                         searchVehicleViewModel.currentPosition = latLng

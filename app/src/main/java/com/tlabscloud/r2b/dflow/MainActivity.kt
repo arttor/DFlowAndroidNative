@@ -12,8 +12,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.tlabscloud.r2b.dflow.util.Injector
-import com.tsystems.r2b.dflow.R
-import com.tsystems.r2b.dflow.databinding.ActivityMainBinding
+import com.tlabscloud.r2b.dflow.R
+import com.tlabscloud.r2b.dflow.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
 

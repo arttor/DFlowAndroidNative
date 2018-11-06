@@ -1,7 +1,7 @@
 package com.tlabscloud.r2b.dflow.util
 
 import android.content.Context
-import com.tsystems.r2b.dflow.R
+import com.tlabscloud.r2b.dflow.R
 
 object PermissionsConst {
     const val LOCATION = 1
