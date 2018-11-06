@@ -23,7 +23,7 @@
                 type="android.view.View.OnClickListener"/>
         <variable
                 name="model"
-                type="com.tsystems.r2b.dflow.screens.login.LoginViewModel" />
+                type="com.tlabscloud.r2b.dflow.screens.login.LoginViewModel" />
     </data>
 
 

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+                name="focusOnVehicleListener"
+                type="android.view.View.OnClickListener"/>
+        <variable
+                name="bookVehicleListener"
+                type="android.view.View.OnClickListener"/>
+        <variable
+                name="vehicle"
+                type="com.tlabscloud.r2b.dflow.model.Vehicle"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@android:color/background_light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{focusOnVehicleListener}"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:background="@color/colorPrimary"
+                android:id="@+id/vehicle_item_header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <ImageView
+                    android:transitionName="@string/bookTransitionName"
+                    android:id="@+id/vehicle_item_image"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:scaleType="centerInside"
+                    android:layout_width="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:layout_height="@dimen/map_location_item_image_height"
+                    android:contentDescription="@{@string/map_location_image(vehicle.name)}"
+                    app:imageFromUrl="@{vehicle.imageUrl}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/margin_normal"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <Button android:text="Book"
+                    android:id="@+id/book_button"
+                    android:onClick="@{bookVehicleListener}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="@dimen/margin_normal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+                android:id="@+id/location_item_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
+                android:text="@{vehicle.name}"
+                android:textAppearance="?attr/textAppearanceListItem"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vehicle_item_header"/>
+        <TextView
+                android:id="@+id/vehicle_item_tariff"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginTop="8dp"
+                android:text="@{vehicle.tariff}"
+                android:textAppearance="?attr/textAppearanceListItem"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/location_item_title"
+                app:layout_constraintHorizontal_bias="0.0"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

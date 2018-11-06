@@ -6,7 +6,7 @@
     <data>
         <variable
                 name="vehicle"
-                type="com.tsystems.r2b.dflow.model.MapLocation"/>
+                type="com.tlabscloud.r2b.dflow.model.Vehicle"/>
     </data>
     <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         <LinearLayout android:orientation="vertical"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      tools:context=".screens.bookVehicle.VehicleBookingFragment">
+                      tools:context="com.tlabscloud.r2b.dflow.screens.bookVehicle.VehicleBookingFragment">
             <ImageView
                     app:imageFromUrl="@{vehicle.imageUrl}"
                     android:transitionName="@string/bookTransitionName"

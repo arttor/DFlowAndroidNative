@@ -7,7 +7,7 @@ apply plugin: 'androidx.navigation.safeargs'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.tsystems.r2b.dflow"
+        applicationId "com.tlabscloud.r2b.dflow"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
