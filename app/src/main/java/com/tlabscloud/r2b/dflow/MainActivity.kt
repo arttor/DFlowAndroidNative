@@ -11,9 +11,8 @@ import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import com.tlabscloud.r2b.dflow.util.Injector
-import com.tlabscloud.r2b.dflow.R
 import com.tlabscloud.r2b.dflow.databinding.ActivityMainBinding
+import com.tlabscloud.r2b.dflow.util.Injector
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -29,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme_NoActionBar)
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         //val appBarConfiguration = AppBarConfiguration(
         appBarConfiguration = AppBarConfiguration(setOf(
             R.id.loginFragment,
-            R.id.mapFragment
+            R.id.searchVehicleFragment
         ), drawerLayout)
         // Set up ActionBar
 

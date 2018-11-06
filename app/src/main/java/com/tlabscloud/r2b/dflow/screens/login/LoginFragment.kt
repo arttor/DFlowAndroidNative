@@ -7,14 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.Navigation
 import com.tlabscloud.r2b.dflow.MainActivity
-import com.tlabscloud.r2b.dflow.util.Injector
+import com.tlabscloud.r2b.dflow.MainViewModel
+import com.tlabscloud.r2b.dflow.R
 import com.tlabscloud.r2b.dflow.databinding.LoginFragmentBinding
+import com.tlabscloud.r2b.dflow.util.Injector
 
 
 class LoginFragment : Fragment() {
+    private val mainViewModel: MainViewModel by lazy(LazyThreadSafetyMode.NONE) {
+        val factory = Injector.getMainViewModelFactory(requireContext())
+        ViewModelProviders.of(requireActivity(), factory).get(MainViewModel::class.java)
+    }
 
     private lateinit var binding: LoginFragmentBinding
     private lateinit var currentContext: Context
@@ -34,9 +41,21 @@ class LoginFragment : Fragment() {
         binding.model = loginViewModel
         binding.login = View.OnClickListener {
             loginViewModel.login()
-            NavHostFragment.findNavController(this).popBackStack()
         }
         rootView = binding.root
+
+        //TODO: check token in mock and redirect to searchVehicleFragment if ok or hide progerssBar and make login visible
+        mainViewModel.user.observe(this, Observer {
+            val navController = Navigation.findNavController(requireActivity(), R.id.nav_fragment)
+            if (it == null) {
+                // hide progressbar and make login visible
+                binding.progressBarCyclic.visibility = View.GONE
+                binding.loginContent.visibility = View.VISIBLE
+            } else {
+                // redirect to searchVehicleFragment
+                navController.navigate(R.id.searchVehicleFragment)
+            }
+        })
         return rootView
     }
 

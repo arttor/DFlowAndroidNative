@@ -13,8 +13,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-412" />
-                            <option name="y" value="-41" />
+                            <option name="x" value="-671" />
+                            <option name="y" value="17" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -25,8 +25,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-192" />
-                            <option name="y" value="-44" />
+                            <option name="x" value="-217" />
+                            <option name="y" value="-254" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -37,6 +37,18 @@
                               </value>
                             </entry>
                           </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="searchVehicleFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-442" />
+                            <option name="y" value="-300" />
+                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>
