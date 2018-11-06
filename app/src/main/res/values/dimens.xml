@@ -10,4 +10,5 @@
     <dimen name="margin_small">8dp</dimen>
 
     <dimen name="map_location_item_image_height">120dp</dimen>
+    <dimen name="card_image_height">160dp</dimen>
 </resources>

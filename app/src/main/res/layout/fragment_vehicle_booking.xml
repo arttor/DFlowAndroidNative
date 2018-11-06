@@ -8,38 +8,44 @@
                 name="vehicle"
                 type="com.tsystems.r2b.dflow.model.MapLocation"/>
     </data>
-    <LinearLayout android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  tools:context=".screens.bookVehicle.VehicleBookingFragment">
-        <ImageView
-                app:imageFromUrl="@{vehicle.imageUrl}"
-                android:transitionName="@string/bookTransitionName"
-                android:id="@+id/book_vehicle_image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@{@string/map_location_image(vehicle.name)}"
-                />
+    <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:minHeight="@dimen/card_image_height">
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      tools:context=".screens.bookVehicle.VehicleBookingFragment">
+            <ImageView
+                    app:imageFromUrl="@{vehicle.imageUrl}"
+                    android:transitionName="@string/bookTransitionName"
+                    android:id="@+id/book_vehicle_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/card_image_height"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@{@string/map_location_image(vehicle.name)}"
+            />
 
-        <TextView
-                android:id="@+id/vehicle_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_normal"
-                android:layout_marginEnd="@dimen/margin_small"
-                android:layout_marginStart="@dimen/margin_small"
-                android:layout_marginTop="@dimen/margin_small"
-                android:text="@{vehicle.name}"
-                android:textAppearance="?attr/textAppearanceListItem"/>
-        <TextView
-                android:id="@+id/vehicle_tariff"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_small"
-                android:layout_marginStart="@dimen/margin_small"
-                android:layout_marginTop="8dp"
-                android:text="@{vehicle.tariff}"
-                android:textAppearance="?attr/textAppearanceListItem"/>
-
-    </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/book_vehicle_content"
+                    android:orientation="vertical"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content">
+                <TextView
+                        android:id="@+id/vehicle_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_small"
+                        android:text="@{vehicle.name}"
+                        android:textAppearance="?attr/textAppearanceListItem"/>
+                <TextView
+                        android:id="@+id/vehicle_tariff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_small"
+                        android:text="@{vehicle.tariff}"
+                        android:textAppearance="?attr/textAppearanceListItem"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 </layout>
