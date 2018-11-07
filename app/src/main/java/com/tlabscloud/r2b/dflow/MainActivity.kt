@@ -36,27 +36,33 @@ class MainActivity : AppCompatActivity() {
         val navController = Navigation.findNavController(this, R.id.nav_fragment)
         mainViewModel.targetFragmentId = navController.currentDestination?.id
 
-        mainViewModel.isTokenValid.observe(this, Observer {
-            if (it) {
-                mainViewModel.targetFragmentId?.let { it1 -> navController.popBackStack(it1,false) }
-            }
-        })
-        mainViewModel.shouldRefresh.observe(this, Observer {
-            if (it) {
-                mainViewModel.checkToken()
-                navController.navigate(R.id.loadingFragment)
-            }else{
-                navController.navigate(R.id.loginFragment)
+        mainViewModel.authAction.observe(this, Observer {
+            when (it) {
+                AuthAction.REDIRECT_LOGIN -> navController.navigate(R.id.loginFragment)
+                AuthAction.LET_IN -> mainViewModel.targetFragmentId?.let { it1 ->
+                    navController.popBackStack(
+                        it1,
+                        false
+                    )
+                }
+                AuthAction.CHECK_TOKEN -> {
+                    mainViewModel.checkToken()
+                    navController.navigate(R.id.loadingFragment)
+                }
+                else -> {
+                }
             }
         })
 
         drawerLayout = binding.drawerLayout
 
-        appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.loadingFragment,
-            R.id.loginFragment,
-            R.id.searchVehicleFragment
-        ), drawerLayout)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.loadingFragment,
+                R.id.loginFragment,
+                R.id.searchVehicleFragment
+            ), drawerLayout
+        )
         // Set up ActionBar
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)

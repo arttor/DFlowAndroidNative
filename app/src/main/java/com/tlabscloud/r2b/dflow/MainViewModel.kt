@@ -18,26 +18,25 @@ class MainViewModel constructor(private val userRepository: UserRepository) : Vi
         this.postValue(false)
     }
     var vehicleToBook: Vehicle? = null
-    val shouldRefresh: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
-        var tokenOk = false
-        var userOk = false
-        //this.postValue(false)
+    val authAction: LiveData<AuthAction> = MediatorLiveData<AuthAction>().apply {
+        var tokenValid = false
+        var userPresented = false
         this.addSource(user) {
-            synchronized(tokenOk) {
-                userOk = it != null
-                if (!tokenOk && userOk) {
-                    this.postValue(true)
-                }
-                if(!userOk){
-                    this.postValue(false)
+            synchronized(tokenValid) {
+                userPresented = it != null
+                when {
+                    !userPresented -> this.postValue(AuthAction.REDIRECT_LOGIN)
+                    userPresented && tokenValid -> this.postValue(AuthAction.LET_IN)
+                    userPresented && !tokenValid -> this.postValue(AuthAction.CHECK_TOKEN)
                 }
             }
         }
         this.addSource(isTokenValid) {
-            synchronized(tokenOk) {
-                tokenOk = it
-                if (!tokenOk && userOk) {
-                    this.postValue(true)
+            synchronized(tokenValid) {
+                tokenValid = it
+                when {
+                    tokenValid && userPresented -> this.postValue(AuthAction.LET_IN)
+                    !tokenValid && userPresented -> this.postValue(AuthAction.CHECK_TOKEN)
                 }
             }
         }
@@ -67,3 +66,5 @@ class MainViewModel constructor(private val userRepository: UserRepository) : Vi
         }
     }
 }
+
+enum class AuthAction { CHECK_TOKEN, REDIRECT_LOGIN, LET_IN }
