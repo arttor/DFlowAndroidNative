@@ -10,23 +10,23 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: latLng
-          in: query
-          description: comma-separated latitude and longtitude coordinates
-          example: '40.741895,-73.989308'
+        - in: query
+          name: latLng
+          schema:
+            type: string
+          description: comma-separated latitude and longtitude coordinates '40.741895,-73.989308'
           required: true
-          type: string
-        - name: range
-          in: query
+        - in: query
+          name: range
+          schema:
+            type: integer
           description: search radius from "latLng" in meters
-          example: 3000
           required: true
-          type: integer
       responses:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/Car'
+            $ref: '#/definitions/CarResponse'
   /book:
     post:
       summary: Book the car.
@@ -46,6 +46,10 @@ paths:
           description: Success
         
 definitions:
+  CarResponse:
+    type: array
+    items:
+      $ref: '#/definitions/Car'
   Car:
     type: object
     properties:
@@ -149,9 +153,9 @@ definitions:
         type: string
         example: '123456'
         description: User id
-      timeSlots:
+      slots:
         type: array
         items:
           type: string
-          example: '12345'
-        description: booked time slots
+          example: '1234'
+          
