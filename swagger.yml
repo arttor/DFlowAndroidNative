@@ -1,0 +1,127 @@
+swagger: '2.0'
+info:
+  version: 0.0.1-SNAPSHOT
+  title: DFlow
+basePath: /
+paths:
+  /cars:
+    get:
+      summary: Receives cars within "range" meters from user.
+      produces:
+        - application/json
+      parameters:
+        - name: userId
+          in: path
+          description: Unique user identifier.
+          required: true
+          type: string
+        - name: range
+          in: query
+          description: >-
+            The VIN - Vehicle Identification Number - of the vehicle to filter
+            for
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Car'
+  /book:
+    post:
+      summary: Book the car.
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Car booking request
+          required: true
+          schema:
+            $ref: '#/definitions/BookRequest'
+      responses:
+        '200':
+          description: Success
+        
+definitions:
+  Car:
+    type: object
+    properties:
+      id:
+        type: string
+        example: '12345'
+        description: >-
+          Car identifier
+      lat:
+        type: number
+        example: 25.2
+        description: Car latitude.
+      lng:
+        type: number
+        example: 9.0
+        description: Car longitude.
+      name:
+        type: string
+        example: "Tesla Model X"
+        description: Car model.
+      sign:
+        type: string
+        example: "380 THX"
+        description: Car sign.
+      tariffs:
+        type: array
+        items:
+          $ref: '#/definitions/Tariff'
+      chargingLevel:
+        type: number
+        example: 99.8
+        description: Battery charging level in percents.
+      seats:
+        type: integer
+        example: 5
+        description: Seats in car
+      transmission:
+        type: string
+        example: ROB
+        description: >-
+          Identifier of the car transmission (ROB - robot, VAR - variable speed drive, MAN - manual, AUT - automatic).
+        enum:
+          - ROB
+          - VAR
+          - MAN
+          - AUT
+    description: Car
+  Tariff:
+    type: object
+    properties:
+      currency:
+        type: string
+        example: "EUR"
+        description: >-
+          Currency of the CDR in ISO 4217 Code.
+      ridePrice:
+        type: number
+        example: 1.2
+        description: Price for 1 minute of ride.
+      waitPrice:
+        type: number
+        example: 0.2
+        description: Price for 1 minute of paid waiting.
+      freeWaitTime:
+        type: integer
+        example: 20
+        description: Time of free car waiting in minutes
+    description: Tariff
+  BookRequest:
+    type: object
+    properties:
+      carId:
+        type: string
+        example: '12345'
+        description: Car id
+      userId:
+        type: string
+        example: '123456'
+        description: User id
