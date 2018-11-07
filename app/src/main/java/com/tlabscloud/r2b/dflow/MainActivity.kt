@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.isTokenValid.observe(this, Observer {
             if (it) {
-                mainViewModel.targetFragmentId?.let { it1 -> navController.popBackStack(it1,true) }
+                mainViewModel.targetFragmentId?.let { it1 -> navController.popBackStack(it1,false) }
             }
         })
         mainViewModel.shouldRefresh.observe(this, Observer {
