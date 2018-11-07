@@ -31,7 +31,7 @@ abstract class DFlowDb : RoomDatabase() {
 
         private fun init(context: Context): DFlowDb {
             //TODO:uncomment to clean db on application start. add schema versioning later
-            context.deleteDatabase(DATABASE_NAME)
+            //context.deleteDatabase(DATABASE_NAME)
             return Room.databaseBuilder(context, DFlowDb::class.java,
                 DATABASE_NAME
             ).build()

@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.tlabscloud.r2b.dflow.MainActivity
@@ -35,27 +34,20 @@ class LoginFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = LoginFragmentBinding.inflate(inflater, container, false)
-
         currentContext = context ?: return binding.root
+        if (mainViewModel.isTokenValid.value == true) {
+            binding.loginContent.visibility = View.GONE
+        } else {
+            binding.loginContent.visibility = View.VISIBLE
+        }
 
         binding.model = loginViewModel
         binding.login = View.OnClickListener {
-            loginViewModel.login()
+            Navigation.findNavController(requireActivity(), R.id.nav_fragment).navigate(R.id.loadingFragment)
+            mainViewModel.login(loginViewModel.username, loginViewModel.password)
         }
         rootView = binding.root
 
-        //TODO: check token in mock and redirect to searchVehicleFragment if ok or hide progerssBar and make login visible
-        mainViewModel.user.observe(this, Observer {
-            val navController = Navigation.findNavController(requireActivity(), R.id.nav_fragment)
-            if (it == null) {
-                // hide progressbar and make login visible
-                binding.progressBarCyclic.visibility = View.GONE
-                binding.loginContent.visibility = View.VISIBLE
-            } else {
-                // redirect to searchVehicleFragment
-                navController.navigate(R.id.searchVehicleFragment)
-            }
-        })
         return rootView
     }
 

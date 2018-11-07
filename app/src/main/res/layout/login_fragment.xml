@@ -30,8 +30,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/login_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone">
+                android:layout_height="match_parent">
 
             <EditText
                     android:layout_width="wrap_content"
@@ -63,11 +62,11 @@
                     android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="8dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <ProgressBar
-                android:id="@+id/progressBar_cyclic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_gravity="center"/>
+        <!--<ProgressBar-->
+                <!--android:id="@+id/progressBar_cyclic"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"-->
+                <!--android:layout_gravity="center"/>-->
     </FrameLayout>
 </layout>

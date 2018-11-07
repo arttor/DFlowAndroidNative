@@ -33,23 +33,31 @@ class MainActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        mainViewModel.user.observe(this, Observer {
-            val navController = Navigation.findNavController(this, R.id.nav_fragment)
-            if (it == null) {
+        val navController = Navigation.findNavController(this, R.id.nav_fragment)
+        mainViewModel.targetFragmentId = navController.currentDestination?.id
+
+        mainViewModel.isTokenValid.observe(this, Observer {
+            if (it) {
+                mainViewModel.targetFragmentId?.let { it1 -> navController.popBackStack(it1,true) }
+            }
+        })
+        mainViewModel.shouldRefresh.observe(this, Observer {
+            if (it) {
+                mainViewModel.checkToken()
+                navController.navigate(R.id.loadingFragment)
+            }else{
                 navController.navigate(R.id.loginFragment)
             }
         })
 
         drawerLayout = binding.drawerLayout
 
-        val navController = Navigation.findNavController(this, R.id.nav_fragment)
-        //val appBarConfiguration = AppBarConfiguration(
         appBarConfiguration = AppBarConfiguration(setOf(
+            R.id.loadingFragment,
             R.id.loginFragment,
             R.id.searchVehicleFragment
         ), drawerLayout)
         // Set up ActionBar
-
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
