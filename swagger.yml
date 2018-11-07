@@ -4,23 +4,23 @@ info:
   title: DFlow
 basePath: /
 paths:
-  /cars:
+  /vehicles:
     get:
       summary: Receives cars within "range" meters from user.
       produces:
         - application/json
       parameters:
-        - name: userId
-          in: path
-          description: Unique user identifier.
+        - name: latLng
+          in: query
+          description: comma-separated latitude and longtitude coordinates
+          example: '40.741895,-73.989308'
           required: true
           type: string
         - name: range
           in: query
-          description: >-
-            The VIN - Vehicle Identification Number - of the vehicle to filter
-            for
-          required: false
+          description: search radius from "latLng" in meters
+          example: 3000
+          required: true
           type: integer
       responses:
         '200':
@@ -82,6 +82,14 @@ definitions:
         type: integer
         example: 5
         description: Seats in car
+      timeZone:
+        type: string
+        example: "-08:00"
+        description: vehicle time zone in ISO
+      timeSlots:
+        type: array
+        items:
+          $ref: '#/definitions/TimeSlot'
       transmission:
         type: string
         example: ROB
@@ -114,6 +122,22 @@ definitions:
         example: 20
         description: Time of free car waiting in minutes
     description: Tariff
+  TimeSlot:
+    type: object
+    properties:
+      id: 
+        type: string
+        example: "sjd3im3"
+        description: time slot UUID
+      start: 
+        type: number
+        example: 1392855800
+        description: start time.
+      end:
+        type: number
+        example: 1392857600
+        description: end time.
+    description: TimeSlot
   BookRequest:
     type: object
     properties:
@@ -125,3 +149,9 @@ definitions:
         type: string
         example: '123456'
         description: User id
+      timeSlots:
+        type: array
+        items:
+          type: string
+          example: '12345'
+        description: booked time slots
