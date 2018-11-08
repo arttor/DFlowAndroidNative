@@ -2,6 +2,7 @@ package com.tlabscloud.r2b.dflow.screens.searchVehicle
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mapbox.api.directions.v5.DirectionsCriteria
@@ -12,6 +13,8 @@ import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.tlabscloud.r2b.dflow.data.repository.VehicleRepository
 import com.tlabscloud.r2b.dflow.model.Vehicle
+import com.tlabscloud.r2b.dflow.util.LocationsFilter
+import com.tlabscloud.r2b.dflow.util.LocationsFilterLiveData
 import com.tlabscloud.r2b.dflow.util.ResourcesConst
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,8 +22,34 @@ import retrofit2.Response
 
 class SearchVehicleViewModel constructor(private val vehicleRepository: VehicleRepository) : ViewModel() {
     val locations: LiveData<List<Vehicle>> = vehicleRepository.getAll()
+    val filter: LocationsFilterLiveData = LocationsFilterLiveData()
     var currentPosition: LatLng? = null
     val route: MutableLiveData<DirectionsRoute?> = MutableLiveData()
+
+    val locationFiltered = MediatorLiveData<List<Vehicle>>().apply {
+        var locs: List<Vehicle>? = null
+        var flt: LocationsFilter? = null
+
+        fun ff() {
+            locs?.filter { vehicle ->
+                flt?.let { f ->
+                    return@filter f.filer(vehicle)
+                }
+                return@filter true
+            }?.let {
+                this.postValue(it)
+            }
+        }
+        this.addSource(locations) {
+            locs = it
+            ff()
+        }
+        this.addSource(filter) {
+            flt = it
+            ff()
+        }
+
+    }
 
     // TODO: move mapbox api calls to separate file
     fun buildRouteTo(destination: LatLng) {

@@ -39,12 +39,12 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.tlabscloud.r2b.dflow.MainViewModel
+import com.tlabscloud.r2b.dflow.R
+import com.tlabscloud.r2b.dflow.databinding.SearchVehicleFragmentBinding
 import com.tlabscloud.r2b.dflow.model.Vehicle
 import com.tlabscloud.r2b.dflow.util.Injector
 import com.tlabscloud.r2b.dflow.util.PermissionsConst
 import com.tlabscloud.r2b.dflow.util.SnapOnScrollListener
-import com.tlabscloud.r2b.dflow.R
-import com.tlabscloud.r2b.dflow.databinding.SearchVehicleFragmentBinding
 import kotlinx.android.synthetic.main.search_vehicle_fragment.*
 import org.jetbrains.anko.longToast
 
@@ -79,14 +79,15 @@ class SearchVehicleFragment : Fragment() {
     private var component: LocationComponent? = null
 
     private val onLocationClickListener: (Vehicle) -> Unit = { location ->
-        mapBoxMap.animateCamera(
-            CameraUpdateFactory.newLatLngZoom(
-                LatLng(
-                    location.latitude,
-                    location.longitude
-                ), 13.0
-            )
-        )
+        searchVehicleViewModel.filter.applyMinCharge(0.5)
+//        mapBoxMap.animateCamera(
+//            CameraUpdateFactory.newLatLngZoom(
+//                LatLng(
+//                    location.latitude,
+//                    location.longitude
+//                ), 13.0
+//            )
+//        )
     }
 
     private val bookVehicleListener: (Vehicle, ImageView) -> Unit = { location, imageView ->
@@ -144,7 +145,7 @@ class SearchVehicleFragment : Fragment() {
 
     private fun subscribeUi(adapter: VehiclesListAdapter) {
 
-        searchVehicleViewModel.locations.observe(viewLifecycleOwner, Observer { mapLocations ->
+        searchVehicleViewModel.locationFiltered.observe(viewLifecycleOwner, Observer { mapLocations ->
             if (mapLocations != null && mapLocations.isNotEmpty())
                 adapter.submitList(mapLocations)
             mapView.getMapAsync {
