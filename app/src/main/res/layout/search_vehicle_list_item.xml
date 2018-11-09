@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
                 name="focusOnVehicleListener"
@@ -36,10 +37,10 @@
                     android:layout_height="@dimen/map_location_item_image_height"
                     android:contentDescription="@{@string/map_location_image(vehicle.name)}"
                     app:imageFromUrl="@{vehicle.imageUrl}"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="@dimen/margin_small"
                     android:layout_marginBottom="@dimen/margin_small"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
             <Button android:text="@string/book"
@@ -81,8 +82,11 @@
                 android:id="@+id/vehicle_item_charge"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_small"
                 app:vehicleChargeLevelText="@{vehicle}"
+                android:drawableStart="@drawable/battery_charging_full_small"
+                tools:text="12.5 km"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
                 android:textAppearance="?attr/textAppearanceListItem"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

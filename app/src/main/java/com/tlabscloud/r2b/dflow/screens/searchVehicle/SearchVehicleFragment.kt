@@ -39,12 +39,12 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.tlabscloud.r2b.dflow.MainViewModel
+import com.tlabscloud.r2b.dflow.R
+import com.tlabscloud.r2b.dflow.databinding.SearchVehicleFragmentBinding
 import com.tlabscloud.r2b.dflow.model.Vehicle
 import com.tlabscloud.r2b.dflow.util.Injector
 import com.tlabscloud.r2b.dflow.util.PermissionsConst
 import com.tlabscloud.r2b.dflow.util.SnapOnScrollListener
-import com.tlabscloud.r2b.dflow.R
-import com.tlabscloud.r2b.dflow.databinding.SearchVehicleFragmentBinding
 import kotlinx.android.synthetic.main.search_vehicle_fragment.*
 import org.jetbrains.anko.longToast
 
@@ -181,37 +181,37 @@ class SearchVehicleFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        mapView.onStart()
+        mapView?.onStart()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView.onResume()
+        mapView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView.onPause()
+        mapView?.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView.onSaveInstanceState(outState)
+        mapView?.onSaveInstanceState(outState)
     }
 
     override fun onStop() {
         super.onStop()
-        mapView.onStop()
+        mapView?.onStop()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView.onLowMemory()
+        mapView?.onLowMemory()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mapView.onDestroy()
+        mapView?.onDestroy()
         component?.locationEngine?.removeLocationUpdates()
     }
 

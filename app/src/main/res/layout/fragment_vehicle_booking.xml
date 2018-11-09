@@ -8,118 +8,99 @@
                 name="vehicle"
                 type="com.tlabscloud.r2b.dflow.model.Vehicle"/>
     </data>
-    <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minHeight="@dimen/card_image_height">
-        <LinearLayout android:orientation="vertical"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      tools:context="com.tlabscloud.r2b.dflow.screens.bookVehicle.VehicleBookingFragment">
-            <ImageView
-                    app:imageFromUrl="@{vehicle.imageUrl}"
-                    android:transitionName="@string/bookTransitionName"
-                    android:id="@+id/book_vehicle_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/card_image_height"
-                    android:scaleType="centerCrop"
-                    android:contentDescription="@{@string/map_location_image(vehicle.name)}"/>
-
-            <LinearLayout
-                    android:id="@+id/book_vehicle_content"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                <TextView
-                        android:id="@+id/vehicle_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_small"
-                        android:text="@{vehicle.name}"
-                        tools:text="SAMPLE Name"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
-                <TableLayout
+        <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="80dp"
+                android:minHeight="@dimen/card_image_height" >
+            <LinearLayout android:orientation="vertical"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          tools:context="com.tlabscloud.r2b.dflow.screens.bookVehicle.VehicleBookingFragment">
+                <ImageView
+                        app:imageFromUrl="@{vehicle.imageUrl}"
+                        android:transitionName="@string/bookTransitionName"
+                        android:id="@+id/book_vehicle_image"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:stretchColumns="*">
+                        android:layout_height="@dimen/card_image_height"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="@{@string/map_location_image(vehicle.name)}"/>
 
-                    <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                        <LinearLayout android:orientation="horizontal"
-                                      android:layout_width="wrap_content"
-                                      android:layout_gravity="center"
-                                      android:layout_height="wrap_content">
-                            <ImageView
-                                    android:layout_width="48dp"
-                                    android:layout_height="48dp"
-                                    android:contentDescription="@string/booking_battery"
-                                    android:src="@drawable/battery_charging_full"
-                                    android:tint="@color/colorAccent"/>
+                <LinearLayout
+                        android:id="@+id/book_vehicle_content"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/vehicle_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_small"
+                            android:text="@{vehicle.name}"
+                            tools:text="SAMPLE Name"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+                    <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:stretchColumns="*">
+
+                        <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
                             <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:drawableStart="@drawable/battery_charging_full"
                                     android:text="@{vehicle.chargeLevelFormatted}"
+                                    android:gravity="center"
                                     android:layout_gravity="center"
                                     tools:text="45%"/>
-                        </LinearLayout>
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@{vehicle.electricRange+` `+@string/km}"
-                                android:layout_gravity="center"
-                                tools:text="400 km"/>
-                        <LinearLayout android:orientation="horizontal"
-                                      android:layout_width="wrap_content"
-                                      android:layout_gravity="center"
-                                      android:layout_height="wrap_content">
-                            <ImageView
-                                    android:layout_width="48dp"
-                                    android:layout_height="48dp"
-                                    android:contentDescription="@string/booking_remaining_distance"
-                                    android:src="@drawable/directions_black"
-                                    android:tint="@color/colorAccent"/>
                             <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@{vehicle.chargeLevelFormatted}"
+                                    android:text="@{vehicle.electricRange+` `+@string/km}"
                                     android:layout_gravity="center"
-                                    tools:text="12.5 km"/>
-                        </LinearLayout>
-                    </TableRow>
-                    <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:singleLine="false"
-                                android:gravity="center_horizontal"
-                                android:layout_gravity="center_horizontal"
-                                android:scrollHorizontally="false"
-                                android:text="@string/booking_battery"/>
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:singleLine="false"
-                                android:gravity="center_horizontal"
-                                android:layout_gravity="center_horizontal"
-                                android:scrollHorizontally="false"
-                                android:text="@string/booking_remaining_distance"/>
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:singleLine="false"
-                                android:gravity="center_horizontal"
-                                android:layout_gravity="center_horizontal"
-                                android:scrollHorizontally="false"
-                                android:text="@string/booking_closest_charger"/>
-                    </TableRow>
-                </TableLayout>
-                <TextView
-                        android:id="@+id/vehicle_tariff"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_small"
-                        app:vehicleTariffText="@{vehicle.tariff}"
-                        android:textAppearance="?attr/textAppearanceListItem"/>
+                                    tools:text="400 km"/>
+                            <LinearLayout android:orientation="horizontal"
+                                          android:layout_width="wrap_content"
+                                          android:layout_gravity="center"
+                                          android:layout_height="wrap_content">
+                                <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@{vehicle.chargeLevelFormatted}"
+                                        android:drawableStart="@drawable/directions_black"
+                                        android:gravity="center"
+                                        android:layout_gravity="center"
+                                        tools:text="12.5 km"/>
+                            </LinearLayout>
+                        </TableRow>
+                        <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:singleLine="false"
+                                    android:gravity="center_horizontal"
+                                    android:layout_gravity="center_horizontal"
+                                    android:scrollHorizontally="false"
+                                    android:text="@string/booking_battery"/>
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:singleLine="false"
+                                    android:gravity="center_horizontal"
+                                    android:layout_gravity="center_horizontal"
+                                    android:scrollHorizontally="false"
+                                    android:text="@string/booking_remaining_distance"/>
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:singleLine="false"
+                                    android:gravity="center_horizontal"
+                                    android:layout_gravity="center_horizontal"
+                                    android:scrollHorizontally="false"
+                                    android:text="@string/booking_closest_charger"/>
+                        </TableRow>
+                    </TableLayout>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+        </com.google.android.material.card.MaterialCardView>
 </layout>
