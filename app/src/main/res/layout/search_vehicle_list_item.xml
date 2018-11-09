@@ -61,8 +61,7 @@
                 android:layout_marginTop="@dimen/margin_small"
                 android:layout_marginStart="@dimen/margin_small"
                 android:text="@{vehicle.name}"
-                android:textStyle="bold"
-                android:textAppearance="?attr/textAppearanceListItem"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/vehicle_item_header"/>

@@ -22,6 +22,8 @@ data class Vehicle(
 ) {
     val latLng: LatLng
         get() = LatLng(latitude, longitude)
+    val chargeLevelFormatted: String
+        get() = "${chargingLevel*100}%"
 }
 
 data class VehicleTariff(
