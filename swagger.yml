@@ -3,32 +3,38 @@ info:
   version: 0.0.1-SNAPSHOT
   title: DFlow
 basePath: /
+tags:
+  - name: vehicle
+  - name: station
+  - name: user
 paths:
-  /vehicles:
+  /vehicle:
     get:
-      summary: Receives cars within "range" meters from user.
+      tags: 
+        - vehicle
+      summary: returns list of available for rent vehicles in specified box range
       produces:
         - application/json
       parameters:
         - in: query
-          name: latLng
-          schema:
-            type: string
+          name: bottomLeft
+          type: string
           description: comma-separated latitude and longtitude coordinates '40.741895,-73.989308'
           required: true
         - in: query
-          name: range
-          schema:
-            type: integer
-          description: search radius from "latLng" in meters
+          name: upperRight
+          type: string
+          description: comma-separated latitude and longtitude coordinates '40.741895,-73.989308'
           required: true
       responses:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/CarResponse'
-  /book:
+            $ref: '#/definitions/VehiclesResponse'
+  /vehicle/book:
     post:
+      tags: 
+        - vehicle
       summary: Book the car.
       produces:
         - application/json
@@ -44,44 +50,83 @@ paths:
       responses:
         '200':
           description: Success
-        
+        '400':
+          description: Reject - car is already booked
+  /station:
+    get:
+      tags:
+        - station
+      summary: Get charging stations in specified range
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: bottomLeft
+          type: string
+          description: comma-separated latitude and longtitude coordinates '40.741895,-73.989308'
+          required: true
+        - in: query
+          name: upperRight
+          type: string
+          description: comma-separated latitude and longtitude coordinates '40.741895,-73.989308'
+          required: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/StationsResponse'
 definitions:
-  CarResponse:
+  VehiclesResponse:
     type: array
     items:
-      $ref: '#/definitions/Car'
-  Car:
+      $ref: '#/definitions/Vehicle'
+  Vehicle:
     type: object
+    required:
+      - id
+      - lat
+      - lng
+      - name
+      - chargingLevel
+      - imageUrl
+      - tariff
+      - electricRange
     properties:
       id:
         type: string
         example: '12345'
         description: >-
-          Car identifier
+          Vehicle unique identifier
       lat:
         type: number
         example: 25.2
-        description: Car latitude.
+        description: Vehicle latitude.
       lng:
         type: number
         example: 9.0
-        description: Car longitude.
+        description: Vehicle longitude.
       name:
         type: string
         example: "Tesla Model X"
-        description: Car model.
-      sign:
+        description: Vehicle model.
+      plate:
         type: string
         example: "380 THX"
-        description: Car sign.
-      tariffs:
-        type: array
-        items:
-          $ref: '#/definitions/Tariff'
+        description: Car plate.
+      imageUrl:
+        type: string
+        example: "http://images.com/image.png"
+        description: vehicle image url
+      tariff:
+        $ref: '#/definitions/Tariff'
       chargingLevel:
         type: number
         example: 99.8
         description: Battery charging level in percents.
+      electricRange:
+        type: integer
+        example: 300
+        description:  total range per charge in km
       seats:
         type: integer
         example: 5
@@ -89,68 +134,130 @@ definitions:
       timeZone:
         type: string
         example: "-08:00"
-        description: vehicle time zone in ISO
-      timeSlots:
-        type: array
-        items:
-          $ref: '#/definitions/TimeSlot'
-      transmission:
-        type: string
-        example: ROB
-        description: >-
-          Identifier of the car transmission (ROB - robot, VAR - variable speed drive, MAN - manual, AUT - automatic).
-        enum:
-          - ROB
-          - VAR
-          - MAN
-          - AUT
+        description: Vehicle time zone in ISO
     description: Car
   Tariff:
     type: object
+    required:
+      - currency
+      - pricePerMinute
     properties:
       currency:
         type: string
         example: "EUR"
         description: >-
-          Currency of the CDR in ISO 4217 Code.
-      ridePrice:
+          Currency in ISO 4217 Code.
+      pricePerMinute:
         type: number
         example: 1.2
         description: Price for 1 minute of ride.
-      waitPrice:
-        type: number
-        example: 0.2
-        description: Price for 1 minute of paid waiting.
       freeWaitTime:
         type: integer
         example: 20
         description: Time of free car waiting in minutes
     description: Tariff
-  TimeSlot:
-    type: object
-    properties:
-      id: 
-        type: string
-        example: "sjd3im3"
-        description: time slot UUID
-      start: 
-        type: number
-        example: 1392855800
-        description: start time.
-      end:
-        type: number
-        example: 1392857600
-        description: end time.
-    description: TimeSlot
   BookRequest:
     type: object
+    required:
+      - vehicleId
+      - userId
     properties:
-      carId:
+      vehicleId:
         type: string
         example: '12345'
-        description: Car id
+        description: Vehicle id
       userId:
         type: string
+        example: '123456'
+        description: User id
+  StationsResponse:
+    type: array
+    items:
+      $ref: '#/definitions/Station'
+  Station:
+    type: object
+    required:
+      - id
+      - lat
+      - lng
+      - name
+      - timeZone
+      - imageUrl
+      - tariff
+      - availableTimeSlots
+    properties:
+      id:
+        type: string
+        example: '12345'
+        description: >-
+          Station unique identifier
+      lat:
+        type: number
+        example: 25.2
+        description: Station latitude.
+      lng:
+        type: number
+        example: 9.0
+        description: Station longitude.
+      name:
+        type: string
+        example: "Bobby's home charger"
+        description: Station name.
+      timeZone:
+        type: string
+        example: "-08:00"
+        description: Station time zone in ISO
+      workingHours:
+        type: string
+        example: "08-22"
+      imageUrl:
+        type: string
+        example: "http://images.com/image.png"
+        description: vehicle image url
+      tariff:
+        $ref: '#/definitions/StationTariff'
+      availableTimeSlots:
+        type: array
+        items:
+          $ref: '#/definitions/TimeSlot'
+    description: Charging station
+  StationTariff:
+    type: object
+    required:
+      - currency
+      - pricePerMinute
+      - pricePerKwH
+    properties:
+      currency:
+        type: string
+        example: "EUR"
+        description: >-
+          Currency in ISO 4217 Code.
+      pricePerMinute:
+        type: number
+        example: 1.2
+        description: Price for 1 minute of charging.
+      pricePerKwH:
+        type: integer
+        example: 2
+        description: rice for 1 KwH.
+    description: Charging station tariff
+  TimeSlot:
+    type: object
+    required:
+      - date
+      - order
+    properties:
+      date:
+        type: string
+        example: "15.08.2033"
+        description: >-
+          Time slot date in dd.MM.yyyy format
+      order:
+        type: integer
+        example: 5
+        description: Timeslot order
+    description: Station time slot
         example: '123456'
         description: User id
       slots:
