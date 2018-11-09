@@ -8,11 +8,16 @@
                 name="vehicle"
                 type="com.tlabscloud.r2b.dflow.model.Vehicle"/>
     </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+    >
         <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="80dp"
-                android:minHeight="@dimen/card_image_height" >
+                android:minHeight="@dimen/card_image_height"
+                android:layout_marginBottom="100dp"
+                android:id="@+id/materialCardView">
             <LinearLayout android:orientation="vertical"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
@@ -30,7 +35,7 @@
                         android:id="@+id/book_vehicle_content"
                         android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="310dp">
                     <TextView
                             android:id="@+id/vehicle_title"
                             android:layout_width="wrap_content"
@@ -90,6 +95,7 @@
                                     android:layout_gravity="center_horizontal"
                                     android:scrollHorizontally="false"
                                     android:text="@string/booking_remaining_distance"/>
+                            <!--TODO: display distance to nearest charger-->
                             <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -103,4 +109,25 @@
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+        <Button
+                android:text="@string/book"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bookButton"
+                android:layout_marginEnd="@dimen/margin_normal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialCardView"/>
+        <TextView
+                app:vehicleTariffText="@{vehicle.tariff}"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:background="@color/colorPrimary"
+                android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialCardView"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
