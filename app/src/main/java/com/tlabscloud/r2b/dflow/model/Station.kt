@@ -6,26 +6,23 @@ import androidx.room.PrimaryKey
 import com.mapbox.mapboxsdk.geometry.LatLng
 
 @Entity
-data class Vehicle(
+data class Station(
     @PrimaryKey val
     id: String,
     val name: String,
     val latitude: Double,
     val longitude: Double,
     val imageUrl: String,
-    val chargingLevel: Double,
-    val electricRange: Int,
-    val seats: Int,
+    val workingHours: String,
     @Embedded
-    val tariff: VehicleTariff,
-    val plate: String? = null
+    val tariff: StationTariff
 ) {
     val latLng: LatLng
         get() = LatLng(latitude, longitude)
 }
 
-data class VehicleTariff(
+data class StationTariff(
     val currency: String,
     val pricePerMinute: Double,
-    val freeWaitTime: Int = 0
+    val pricePerKwH: Double
 )

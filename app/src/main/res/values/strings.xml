@@ -17,6 +17,11 @@
     <string name="gps_disabled">GPS is disabled. Turn it on?</string>
     <string name="enable">Enable</string>
     <string name="disable">Disable</string>
+    <string name="book">Book</string>
+    <string name="tariff_per_minute">per minute</string>
+    <string name="tariff_wait_time">wait time:</string>
+    <string name="min">min</string>
+    <string name="km">km</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="map_location_image">Image of %1$s</string>

@@ -42,7 +42,7 @@
                     android:layout_marginBottom="@dimen/margin_normal"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <Button android:text="Book"
+            <Button android:text="@string/book"
                     android:id="@+id/book_button"
                     android:onClick="@{bookVehicleListener}"
                     android:layout_width="0dp"
@@ -55,28 +55,41 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-                android:id="@+id/location_item_title"
+                android:id="@+id/vehicle_item_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_small"
                 android:layout_marginStart="@dimen/margin_small"
                 android:text="@{vehicle.name}"
+                android:textStyle="bold"
                 android:textAppearance="?attr/textAppearanceListItem"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/vehicle_item_header"/>
+
         <TextView
                 android:id="@+id/vehicle_item_tariff"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_small"
                 android:layout_marginStart="@dimen/margin_small"
-                android:layout_marginTop="8dp"
-                android:text="@{vehicle.tariff}"
+                app:vehicleTariffText="@{vehicle.tariff}"
                 android:textAppearance="?attr/textAppearanceListItem"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/location_item_title"
+                app:layout_constraintTop_toBottomOf="@id/vehicle_item_title"/>
+        <TextView
+                android:id="@+id/vehicle_item_charge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginTop="8dp"
+                app:vehicleChargeLevelText="@{vehicle}"
+                android:textAppearance="?attr/textAppearanceListItem"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/vehicle_item_tariff"
                 app:layout_constraintHorizontal_bias="0.0"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,6 +12,7 @@ import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.tlabscloud.r2b.dflow.data.repository.VehicleRepository
 import com.tlabscloud.r2b.dflow.model.Vehicle
+import com.tlabscloud.r2b.dflow.model.VehicleTariff
 import com.tlabscloud.r2b.dflow.util.ResourcesConst
 import retrofit2.Call
 import retrofit2.Callback
@@ -46,10 +47,10 @@ class SearchVehicleViewModel constructor(private val vehicleRepository: VehicleR
                     // Check that the response isn't null and that the response has a route
                     when {
                         response.body() == null -> Log.e(
-                            this.javaClass.name,
+                            this::javaClass.name,
                             "No routes found, make sure you set the right user and access token."
                         )
-                        response.body()!!.routes().size < 1 -> Log.e(this.javaClass.name, "No routes found")
+                        response.body()!!.routes().size < 1 -> Log.e(this::javaClass.name, "No routes found")
                         else -> {
                             val currentRoute = response.body()!!.routes()[0]
                             route.postValue(currentRoute)
@@ -58,7 +59,7 @@ class SearchVehicleViewModel constructor(private val vehicleRepository: VehicleR
                 }
 
                 override fun onFailure(call: Call<DirectionsResponse>, throwable: Throwable) {
-                    Log.e(this.javaClass.name, "Directions API Failure")
+                    Log.e(this::javaClass.name, "Directions API Failure")
                 }
             })
 
@@ -68,26 +69,58 @@ class SearchVehicleViewModel constructor(private val vehicleRepository: VehicleR
     fun getNearbyLocations(userLocation: LatLng) {
         vehicleRepository.create(
             Vehicle(
+                "1",
                 "Jaguar E Pace",
                 userLocation.latitude + 0.02,
-                userLocation.longitude + 0.01, 0.6, "5\$ per hour",
-                "http://grantandgreen.de/wp-content/uploads/2018/03/Jag-E-Pace-BS-Blue.jpg"
+                userLocation.longitude + 0.01,
+                "http://grantandgreen.de/wp-content/uploads/2018/03/Jag-E-Pace-BS-Blue.jpg",
+                0.6,
+                200,
+            5,
+            VehicleTariff(
+                "EUR",
+                0.5,
+                20
+            ),
+            "a789de"
+
+
             )
         )
         vehicleRepository.create(
             Vehicle(
+                "2",
                 "Tesla",
                 userLocation.latitude - 0.05,
-                userLocation.longitude + 0.05, 0.4, "8\$ per hour",
-                "https://05a56bcbb6bd8e964f64-5f63a9a90be9c7873869b0beb9b45e3c.ssl.cf1.rackcdn.com/5YJSA1H1XEFP34954/9c702abaffc83a804232b802de6828bc.jpg"
+                userLocation.longitude + 0.05,
+                "https://05a56bcbb6bd8e964f64-5f63a9a90be9c7873869b0beb9b45e3c.ssl.cf1.rackcdn.com/5YJSA1H1XEFP34954/9c702abaffc83a804232b802de6828bc.jpg",
+                0.4,
+                300,
+                5,
+                VehicleTariff(
+                    "EUR",
+                    0.4,
+                    20
+                ),
+                "w123de"
             )
         )
         vehicleRepository.create(
             Vehicle(
+                "3",
                 "Also a car",
-                userLocation.latitude + 0.07,
-                userLocation.longitude - 0.01, 0.9, "1\$ per hour",
-                "https://i.pinimg.com/originals/a3/40/53/a34053f7922b8cc610030e42d456a239.jpg"
+                userLocation.latitude+ 0.07,
+                userLocation.longitude - 0.01,
+                "https://i.pinimg.com/originals/a3/40/53/a34053f7922b8cc610030e42d456a239.jpg",
+                0.9,
+                100,
+                2,
+                VehicleTariff(
+                    "EUR",
+                    0.1,
+                    30
+                ),
+                "s453de"
             )
         )
     }
