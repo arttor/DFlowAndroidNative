@@ -258,11 +258,3 @@ definitions:
         example: 5
         description: Timeslot order
     description: Station time slot
-        example: '123456'
-        description: User id
-      slots:
-        type: array
-        items:
-          type: string
-          example: '1234'
-          
