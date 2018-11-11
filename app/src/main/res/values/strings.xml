@@ -25,6 +25,176 @@
     <string name="booking_battery">BATTERY</string>
     <string name="booking_remaining_distance">REMAINING\nDISTANCE</string>
     <string name="booking_closest_charger">CLOSEST\nCHARGER</string>
+    <string name="booking_confirm">Confirm booking</string>
+    <string name="booking_terms_and_conditions">Terms and conditions</string>
+    <string name="booking_tariff_details">Tariff details</string>
+    <string name="booking_terms_and_conditions_sample">The Online Booking Terms and Conditions below are applicable as of February, 20th 2018.
+
+        We ask you to read our Online Booking Terms and Conditions as you will be asked to confirm that you have read and understood these as a part of our Terms and Conditions before your booking can be confirmed.
+
+        Following these guidelines will help you to: (i)understand what you can expect from us during the booking process; (ii) get the key information on booking; (iii)understand what we need from you in order to complete your booking successfully.
+
+        1. Online Booking Process
+        The following are the main steps to making an online booking:
+
+        i. First Step: Selection of the service
+        Enter your rental criteria in the online booking form including rental dates, rental locations and choice of vehicle.
+
+        ii. Second Step: Europcars offer
+        Based on the criteria you provide, Europcar will provide you with several offers matching your request.
+        The offer is defined as: - a service, which includes a selected vehicle category available for a chosen duration with selected options (if any) and a rate, which can be either a prepaid rate or a pay on arrival rate.
+        You will then be asked to select the offer that best fits you.
+
+        iii. Third Step: Acceptance of the offer
+        You will then be able to add extras or additional protections by clicking on the desired items. The cost of each selected items will be added to the final price of your rental.
+
+        iv. Fourth Step:Confirmation
+        Once you have completed your booking, You will be required to click on the “check out” box to temporary book the selected offer.
+
+        v. Fifth Step: Europcar notification
+        After filling in your customer details, you will be asked to verify your booking summary and then to give your acceptance to your booking. For that purpose, you will be invited to read the applicable Terms and Conditions of Hire and if you agree to these terms, you will then be able to finalize your booking by clicking on the “Pay Now” or “Pay at pick up” button.
+
+        vi. Sixth Step: Europcar notification
+        Europcar will send you a booking confirmation including your reservation number. The confirmation email will include the main details of your reservation.
+        2. Booking confirmation email sent by Europcar
+        At the end of the booking process you will be taken to the "Reservation Confirmation" page; the reservation number will be highlighted. You will also receive a booking confirmation email containing the full details of your booking and a copy of the terms and conditions of hire applicable in the country of your rental. We recommend that you print this booking confirmation email and keep it for your records. At the end of the booking process you will be taken to the "Reservation Confirmation" page; the reservation number will be highlighted. You will also receive a confirmation email containing the details of your reservation. Please print these and keep them for your records.
+
+        3. Reservation Details
+        Booking Date:
+        We can accept bookings for same-day rental with up to two (2) hours advance notice. We can accept bookings for rental made up to fifteen (15) months in advance.
+
+        Minimum Rental Period:
+        The minimum rental period is one (1) day (exceptional hourly rentals may be available in selected stations). One (1) day is interpreted as a period of twenty-four (24) hours. Vehicle collection and return is included within this 24 hour period. - Rentals of less than twenty-four (24) hours will be charged a full days rate except in select locations where hourly rentals are available. Certain vouchers and promotional rates require a specific minimum to qualify. Please consult the terms and conditions mentioned on your voucher.
+
+        Maximum Rental Duration:
+        We can accept bookings for maximum rental period of twelve (12) months.
+        4. Rates
+        Your Europcar rental quote takes into account all mandatory charges corresponding to your booking criteria.
+
+        This quote generally includes the following items:
+
+        - Value Added Tax or any other local tax;
+        - Young Driver surcharge (if applicable); - Unlimited Mileage, or if this is not the case, the clear number of kilometers /miles included, with the cost of each extra kilometre /mile; - Premium station surcharge; - Road tax and licence fee surcharge; - Third party liability insurance; - Collision Damage Waiver ("CDW") and Theft Waiver ("TW"). CDW and TW may be merged together in Loss Damage Waiver ("LDW") in some countries. An excess amount displayed at time of reservation indicates the maximum amount of money you are liable for in the event of damage to or theft of the vehicle. This excess amount may be waived in some countries by purchasing optional additional protection at time of rental.
+
+        The list of these charges are printed on the reservation confirmation and restated in the booking confirmation email.
+
+        The rates are guaranteed for the rental associated to the confirmed booking.
+
+        Additional charges to your basic rental rate may include:
+
+        - Additional Driver charge: when there is more than one driver associated with a rental, the second, or subsequent, driver is referred to as the additional driver. There may be a charge applied for each, or all, additional drivers.
+        - Premium Location / Airport / Railway Service Charge: an additional charge which applies at certain central-city, airport, or railway locations; - Any additional equipment: please review our section Special Car Equipment; - Out-of hours service: If you pick up or return the car outside the normal opening hours, some countries may bill "after hours service". Please check at reservation and/or check out time. - Full tank option: in some countries, you have the choice of prepaying your refueling service. - Damages and Theft: up to the limit of the protection excess if this protection has been subscribed to, otherwise up to the limit of the vehicles residual value.
+
+        5. Payment / Means of payment / Deposit terms and conditions
+        A. Payment
+
+        - "Book and Pay now" - Online booking: Prepayment (payment at the time of booking): When opting for "prepaid rate(s)" online, payment of the full estimated amount of your rental will be required at time of booking.
+
+        - "Book and Pay at station" - Payment at station: You can decide to pay your rental directly at the station. Please note that certain credit card companies may not be represented in the country where the rental takes place. Therefore, we recommend that You verify the credit card acceptance rules mentioned in the Terms and Conditions of Hire of your country of rental. For that purpose, please click here and select your country of rental.
+
+        B. Means of payment
+
+        Payments can me made using the following means of payment:
+
+        Credit card(s): Credit cards usually accepted within Europcar are "American Express", "Diners Club", "MasterCard" and "Visa".
+        Warning: Please note that payment using credit(s) card(s) is (are) accepted in accordance with the limits authorised by your credit card issuer. The credit card holder (in case of a prepaid booking) must be identified as the renter (the "Main driver" to be mentioned on the rental agreement). Such person must present his/her credit card (identified with the same name) at time of "Check Out".
+
+        - Debit card(s): Debit card(s), that are not associated to a bank account, are NOT accepted at time of booking or at the time of rental except:
+
+        - "Maestro" cards issued by UK banks and for customers renting in the UK; and
+
+        - "Visa Electron" card(s) that are accepted for online payment on some country of destination (Please note however that customers who do not possess any other credit card in addition to the "Visa Electron" shall ensure their account holds sufficient funds for the deposit to be charged at "Check-out").
+
+        Cash/cheque:
+        Payments in cash or by cheque can only be made:
+
+        - for domestic rental;
+        - for rentals of vehicles classified as "Lowest categories" (such as: "Mini" or "Economy"). - Payments in cash or by cheque are furthermore subject to: additional references and maximum ceiling amount.
+
+        For any further information, please refer to the Terms and Conditions of Hire of your country of rental, by clicking here and selecting your country of rental.
+
+        C. Deposit - Transaction authorisation
+
+        During Your booking and at time of "Check-out":
+
+        During your booking and at time of "Check-out", You will be informed that in addition to the price of your rental, You will be asked to leave a deposit. The amount of the deposit will be mentioned before the finalization of your booking, restated in your booking confirmation email and also on the Rental Agreement that You will receive at the rental station at time of check-out. The deposit takes the form of an electronic pre-authorization taken on Your credit- card (the "Deposit").
+
+        This Deposit allows Europcar to secure the final transaction amount as Europcar will receive the protection of an authorization before the start of the rental period. It also confirms that Your bank account is valid and within the available spending limit.
+
+        Warning: Amount of deposit depends on the local policy of the "Check out" station(s) and may vary from one country to another.
+
+        For more information on the method of calculation of the deposit, please click here.
+
+        Please note however that, from a general perspective, the Deposit amount covers the vehicle rental agreement period as well as any extra charges that may incurred during your rental. For any further information on the coverage of the deposit, please refer to the Terms and Conditions of Hire of your country of rental, by clicking here and selecting your country of rental.
+
+        The amount of the Deposit stays valid for the length of the rental agreement period. For rental agreements longer than thirty (30) days, a new authorization for each additional period of rental will be requested by Europcar from the card holders bank account.
+
+        At time of "Check-in":
+
+        If the final charged amount for the car rental services rendered is below the Deposit amount at time of "check-out" then an additional authorization may be requested to cover the amount due.
+
+        6. Qualification at time of rental: Documentation and age limit
+        For important information concerning driving licenses and other requested documents, please refer to the Terms and Conditions of Hire of your country of rental, by clicking here and selecting your country of rental.
+
+        7. Changes to reservation: Modification/Cancellation Policy
+        You can view, modify or cancel your reservation online after it is confirmed, provided it is done up to the timeline mentioned in the Terms and Conditions of Hire of your country of rental. Simply click on the "Modify / Cancel" link in the Concierge Service or My Europcar sections.
+
+        Please note that you must be logged on to the same Europcar driver ID under which the reservation was made in order to modify, cancel or delete reservations. You cannot amend online reservations made or modified via a Europcar Reservation Service Centre, Travel Agency or reservations made using a different Europcar driver ID. For changes to reservations made or modified via a Europcar Reservation Service Centre or a Travel Agency, please contact the relevant call centre.
+
+        In the case of "prepaid" reservations, modification/cancellation fees may apply. For more information, please refer to the Prepayment Terms and Conditions, section 5.
+
+        In case of “pay on arrival” reservations (non-prepaid), you may modify or cancel your booking without charge, provided it is done up to 2 hours prior to the due pick up date and time.
+
+        8. Guaranteed reservation Policy
+        The Europcar rental location (pick up station) is required to provide the requested vehicle category as confirmed at the time of booking, subject to the renter meeting rental requirements.
+
+        If the vehicle category cannot be provided, alternative solutions will be proposed at no additional cost to you, within one hour of arrival.
+
+        8.1 No Credit Card Details Provided:
+
+        If at the time of booking you did not specify your debit, credit or charge card details, Europcar is committed to maintain your reservation for one (1) hour after the due pick up time.
+        Europcar will endeavor to provide the requested car category after the one hour period and until the reservation is listed as a "no-show" (at the closing time of the rental pick up station). If this is not possible, an alternative will be presented to you and, if you agree, another car category will be proposed and charged (new rates may apply), subject to you meeting the rental requirements.
+
+        8.2 Credit Card Details Provided:
+
+        If you specified at time of booking your debit, credit or charge card details and Driver ID (or your Driver ID only in which card details are stored) the Europcar pick up station is required to provide the requested vehicle category until the station closure or up to 12:00 (noon) the day following the due pick up time for 24/7 stations. In case you fail to collect the vehicle during this period, a no-show fee may be applied. (Please refer to the "No-Show" fee paragraph 8.4).
+
+        8.3 Flight / Train delay
+
+        At airport and railway rental stations, the reservation is maintaned for one (1) hour after the actual flight/train arrival time if the reservation has been quoted with a flight or train number.
+        In the event of a flight/train delay beyond this period, we serve up to 1h after the actual time of arrival, and at some airport /railway rental stations may remain open up to a maximum of 2 hours after the normal closing time. In such a case, an after-hours charge may apply.
+
+        8.4 Failure to Collect the Vehicle - "No Show" fee
+
+        If you did not cancel your reservation up to 48 hours prior to the due pick up date and time (Please refer to "Changes to Reservation: Modification/Cancellation Policy", paragraph 7) and fail to collect your vehicle prior to the closing time of the station (or up to 12:00 (noon) the day following the due check out time for the 24/7 stations) - a fee will be charged by Europcar according to country of rental (please refer to the Terms and Conditions of Hire (and more particularly Tariff’s Guide)  of your country of rental, by clicking here and selecting your country of rental). This amount will be charged either in local currency or in your card billing currency, where applicable and at the exchange rate and conditions valid at time of transaction.
+
+        8.5 Failure to deliver the requested vehicle category
+
+        If Europcar is unable to provide the vehicle of the category that you requested at the time of your booking, the following alternative solutions apply :
+
+        - An upgrade at no additional cost; OR
+        - A downgrade (at the relevant category price) and compensation (such as an upgrade voucher for a future rental).
+
+        In cases where neither the upgrade nor downgrade offered are acceptable, and no vehicle of the reserved category is available within 1-hour of the due check-out time, Europcar will propose you the following alternative at no additional cost:
+
+        - Organize transport to the nearest alternative Europcar rental location (limit 50km); OR
+        - Rent a vehicle with another company located in proximity to the Europcar rental location
+
+        In cases where regulation imposes a penalty to be paid to you by the failing renting station, the failing renting station shall act as the regulation requires.
+
+        9. Force Majeure
+        Neither party shall be liable for failure in its performance hereunder caused by any case of Force Majeure. "Force Majeure" shall be considered - as defined by the applicable regulation(s) - as any irresistible or unforeseeable event, independent of the party suffering of the case of Force Majeure, which prevents this party from fulfilling its obligations.
+
+        So that in the case:
+
+        - of a prepaid booking; the transaction will be cancelled, and the renting station will refund to you the prepaid rental charge that has been collected. The renting station will have no further obligations with respect to the transaction;
+
+        - of a guaranteed reservation; the reservation will expire, a No Show fee will not be charged to you and the renting station will have no further obligations with respect to the transaction.
+
+        10. Applicable Law – Competent court
+        These Terms and Conditions have been issued under French law and are accessible on www.europcar.com hosted on French territory. French law is applicable.
+
+        If You have booked a vehicle in the capacity of business person, any dispute arising from your booking shall be subject to the exclusive jurisdiction of the Versailles Commercial Court (or, when it is a Europcar subsidiary of franchisee, the competent court of the place of registration of the Europcar subsidiary or franchisee).</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="map_location_image">Image of %1$s</string>

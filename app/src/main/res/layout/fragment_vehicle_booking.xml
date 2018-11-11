@@ -11,6 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            tools:context="com.tlabscloud.r2b.dflow.screens.bookVehicle.VehicleBookingFragment"
     >
         <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -18,99 +19,125 @@
                 android:minHeight="@dimen/card_image_height"
                 android:layout_marginBottom="100dp"
                 android:id="@+id/materialCardView">
-            <LinearLayout android:orientation="vertical"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          tools:context="com.tlabscloud.r2b.dflow.screens.bookVehicle.VehicleBookingFragment">
-                <ImageView
-                        app:imageFromUrl="@{vehicle.imageUrl}"
-                        android:transitionName="@string/bookTransitionName"
-                        android:id="@+id/book_vehicle_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/card_image_height"
-                        android:scaleType="centerCrop"
-                        android:contentDescription="@{@string/map_location_image(vehicle.name)}"/>
-
-                <LinearLayout
-                        android:id="@+id/book_vehicle_content"
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="310dp">
-                    <TextView
-                            android:id="@+id/vehicle_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_small"
-                            android:text="@{vehicle.name}"
-                            tools:text="SAMPLE Name"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
-                    <TableLayout
+                <LinearLayout android:orientation="vertical"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content">
+                    <ImageView
+                            app:imageFromUrl="@{vehicle.imageUrl}"
+                            android:transitionName="@string/bookTransitionName"
+                            android:id="@+id/book_vehicle_image"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:stretchColumns="*">
+                            android:layout_height="@dimen/card_image_height"
+                            android:scaleType="centerCrop"
+                            android:contentDescription="@{@string/map_location_image(vehicle.name)}"/>
 
-                        <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                            <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:drawableStart="@drawable/battery_charging_full"
-                                    android:text="@{vehicle.chargeLevelFormatted}"
-                                    android:gravity="center"
-                                    android:layout_gravity="center"
-                                    tools:text="45%"/>
-                            <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@{vehicle.electricRange+` `+@string/km}"
-                                    android:layout_gravity="center"
-                                    tools:text="400 km"/>
-                            <LinearLayout android:orientation="horizontal"
-                                          android:layout_width="wrap_content"
-                                          android:layout_gravity="center"
-                                          android:layout_height="wrap_content">
+                    <androidx.core.widget.NestedScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                    <LinearLayout
+                            android:layout_margin="@dimen/margin_small"
+                            android:id="@+id/book_vehicle_content"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                        <TextView
+                                android:id="@+id/vehicle_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/margin_small"
+                                android:text="@{vehicle.name}"
+                                tools:text="SAMPLE Name"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+                        <TableLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:stretchColumns="*">
+
+                            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
                                 <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:drawableStart="@drawable/battery_charging_full"
                                         android:text="@{vehicle.chargeLevelFormatted}"
-                                        android:drawableStart="@drawable/directions_black"
                                         android:gravity="center"
                                         android:layout_gravity="center"
-                                        tools:text="12.5 km"/>
-                            </LinearLayout>
-                        </TableRow>
-                        <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                            <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:singleLine="false"
-                                    android:gravity="center_horizontal"
-                                    android:layout_gravity="center_horizontal"
-                                    android:scrollHorizontally="false"
-                                    android:text="@string/booking_battery"/>
-                            <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:singleLine="false"
-                                    android:gravity="center_horizontal"
-                                    android:layout_gravity="center_horizontal"
-                                    android:scrollHorizontally="false"
-                                    android:text="@string/booking_remaining_distance"/>
-                            <!--TODO: display distance to nearest charger-->
-                            <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:singleLine="false"
-                                    android:gravity="center_horizontal"
-                                    android:layout_gravity="center_horizontal"
-                                    android:scrollHorizontally="false"
-                                    android:text="@string/booking_closest_charger"/>
-                        </TableRow>
-                    </TableLayout>
+                                        tools:text="45%"/>
+                                <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@{vehicle.electricRange+` `+@string/km}"
+                                        android:layout_gravity="center"
+                                        tools:text="400 km"/>
+                                <LinearLayout android:orientation="horizontal"
+                                              android:layout_width="wrap_content"
+                                              android:layout_gravity="center"
+                                              android:layout_height="wrap_content">
+                                    <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@{vehicle.chargeLevelFormatted}"
+                                            android:drawableStart="@drawable/directions_black"
+                                            android:gravity="center"
+                                            android:layout_gravity="center"
+                                            tools:text="12.5 km"/>
+                                </LinearLayout>
+                            </TableRow>
+                            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+                                <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:singleLine="false"
+                                        android:gravity="center_horizontal"
+                                        android:layout_gravity="center_horizontal"
+                                        android:scrollHorizontally="false"
+                                        android:text="@string/booking_battery"/>
+                                <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:singleLine="false"
+                                        android:gravity="center_horizontal"
+                                        android:layout_gravity="center_horizontal"
+                                        android:scrollHorizontally="false"
+                                        android:text="@string/booking_remaining_distance"/>
+                                <!--TODO: display distance to nearest charger-->
+                                <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:singleLine="false"
+                                        android:gravity="center_horizontal"
+                                        android:layout_gravity="center_horizontal"
+                                        android:scrollHorizontally="false"
+                                        android:text="@string/booking_closest_charger"/>
+                            </TableRow>
+                        </TableLayout>
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/margin_small"
+                                android:text="@string/booking_tariff_details"
+                                tools:text="Tariff details"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:vehicleTariffText="@{vehicle.tariff}"
+                                tools:text="0.5 EUR per min, free waiting time: 20 min"/>
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/margin_small"
+                                android:text="@string/booking_terms_and_conditions"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/booking_terms_and_conditions_sample"/>
+                    </LinearLayout>
+                    </androidx.core.widget.NestedScrollView>
                 </LinearLayout>
-            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
         <Button
-                android:text="@string/book"
+                android:text="@string/booking_confirm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/bookButton"
@@ -119,7 +146,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/materialCardView"/>
         <TextView
-                app:vehicleTariffText="@{vehicle.tariff}"
+                app:vehicleTariffShortText="@{vehicle.tariff}"
                 android:layout_marginStart="@dimen/margin_normal"
                 android:background="@color/colorPrimary"
                 android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
