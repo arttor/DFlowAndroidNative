@@ -24,14 +24,12 @@ class LoadingFragment : Fragment() {
         super.onStart()
         val act = requireActivity() as MainActivity
         act.lockDrawer(true)
-        act.supportActionBar?.hide()
     }
 
     override fun onStop() {
         super.onStop()
         val act = requireActivity() as MainActivity
         act.lockDrawer(false)
-        act.supportActionBar?.show()
     }
 
 

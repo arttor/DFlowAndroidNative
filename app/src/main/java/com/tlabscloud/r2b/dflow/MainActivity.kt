@@ -8,7 +8,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.tlabscloud.r2b.dflow.databinding.ActivityMainBinding
@@ -17,8 +16,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var appBarConfiguration: AppBarConfiguration
+    public lateinit var drawerLayout: DrawerLayout
+   // private lateinit var appBarConfiguration: AppBarConfiguration
 
     private lateinit var binding: ActivityMainBinding
 
@@ -54,19 +53,8 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        drawerLayout = binding.drawerLayout
+       drawerLayout = binding.drawerLayout
 
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.loadingFragment,
-                R.id.loginFragment,
-                R.id.searchVehicleFragment
-            ), drawerLayout
-        )
-        // Set up ActionBar
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
 
         // Set up navigation menu
         binding.navView.setupWithNavController(navController)
@@ -74,12 +62,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(
-            Navigation.findNavController(this, R.id.nav_fragment), appBarConfiguration
+            Navigation.findNavController(this, R.id.nav_fragment), drawerLayout
         )
     }
 
+
     override fun onBackPressed() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.END)) {
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
             val currentDestination = Navigation.findNavController(this, R.id.nav_fragment).currentDestination

@@ -8,7 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import com.squareup.picasso.Picasso
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
+import com.tlabscloud.r2b.dflow.MainActivity
 import com.tlabscloud.r2b.dflow.MainViewModel
 import com.tlabscloud.r2b.dflow.R
 import com.tlabscloud.r2b.dflow.databinding.FragmentVehicleBookingBinding
@@ -28,14 +31,20 @@ class VehicleBookingFragment : Fragment() {
     ): View? {
         binding = FragmentVehicleBookingBinding.inflate(inflater, container, false)
         binding.vehicle = mainViewModel.vehicleToBook
-        mainViewModel.vehicleToBook?.let {
-            Picasso.with(requireContext())
-                .load(it.imageUrl)
-                .into(binding.bookVehicleImage)
-
-        }
         sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(R.transition.move)
         setUpFadeInContentAnimation(binding.bookVehicleContent)
+        setUpFadeInContentAnimation(binding.toolbar)
+
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.loadingFragment,
+                R.id.loginFragment,
+                R.id.searchVehicleFragment
+            ), (requireActivity() as MainActivity).drawerLayout
+        )
+        // Set up ActionBar
+        binding.collapsingToolbar.setupWithNavController(binding.toolbar, findNavController(), appBarConfiguration)
+
         return binding.root
     }
 

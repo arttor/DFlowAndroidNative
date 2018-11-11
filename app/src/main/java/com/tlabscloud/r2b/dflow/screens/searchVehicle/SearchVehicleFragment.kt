@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -38,6 +39,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.tlabscloud.r2b.dflow.MainActivity
 import com.tlabscloud.r2b.dflow.MainViewModel
 import com.tlabscloud.r2b.dflow.R
 import com.tlabscloud.r2b.dflow.databinding.SearchVehicleFragmentBinding
@@ -132,6 +134,10 @@ class SearchVehicleFragment : Fragment() {
                 binding.searchVehiclesList.adapter as VehiclesListAdapter
             val loc = ad.getItemByPosition(it)
             searchVehicleViewModel.buildRouteTo(loc.latLng)
+        }
+        binding.toolbarListener = View.OnClickListener {
+            val act = requireActivity() as MainActivity
+            act.drawerLayout.openDrawer(GravityCompat.START)
         }
         binding.searchVehiclesList.addOnScrollListener(snapOnScrollListener)
         subscribeUi(

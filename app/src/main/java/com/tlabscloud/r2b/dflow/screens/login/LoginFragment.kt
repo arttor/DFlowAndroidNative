@@ -55,7 +55,6 @@ class LoginFragment : Fragment() {
         super.onStart()
         val act = requireActivity() as MainActivity
         act.lockDrawer(true)
-        act.supportActionBar?.hide()
     }
 
     override fun onStop() {
@@ -63,7 +62,6 @@ class LoginFragment : Fragment() {
         val act = requireActivity() as MainActivity
         act.lockDrawer(false)
         showSoftwareKeyboard(false)
-        act.supportActionBar?.show()
     }
 
     private fun showSoftwareKeyboard(showKeyboard: Boolean) {
